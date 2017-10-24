@@ -222,9 +222,9 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
 */
 
 
-Route::get('images/{filename}', function ($filename)
+Route::get('images/{pedido_id}/{filename}', function ($pedido_id, $filename)
 {
-    $path = storage_path() . '/app/subidas/movil/' . $filename;
+    $path = storage_path() . '/app/'.$pedido_id.'/' . $filename;
 
     if(!File::exists($path)) abort(404);
 
