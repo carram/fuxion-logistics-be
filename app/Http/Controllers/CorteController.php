@@ -105,6 +105,7 @@ class CorteController extends Controller
             $corte->save();
 
             $i = 2;
+            //foreach para relacionar los pedidos con los productos
             foreach ($results as $row){
                 //se busca la bodega
                 $bodega = Bodega::where('alias',$row->warehouse)->first();
@@ -154,9 +155,9 @@ class CorteController extends Controller
 
                     $empresario = new Empresario();
                     $empresario->tipo = $row->customer_type;
-                    $empresario->direccion = $row->direccion_referencia;
-                    $empresario->ciudad = $row->ciudad;
-                    $empresario->departamento = $row->departamento;
+                    $empresario->direccion = trim($row->direccion_referencia);
+                    $empresario->ciudad = trim($row->ciudad);
+                    $empresario->departamento = trim($row->departamento);
                     $empresario->empresario_id = $row->customer_id;
                     $empresario->enroler_id = $row->enroller_id;
                     $empresario->user_id = $user_client->id;
@@ -194,7 +195,7 @@ class CorteController extends Controller
                     $pedido->costo_envio = floatval($row->shipping_charge)/10000;
                     $pedido->empresario_id = $empresario->id;
                     $pedido->bodega_id = $bodega->id;
-                    $pedido->estado = 'pendiente';//valor por defecto mientras se evalua si se cambia
+                    $pedido->corte_id = $corte->id;
                     $pedido->save();
                 }
 
@@ -208,8 +209,8 @@ class CorteController extends Controller
                         return false;
                     }
                     $producto = new Producto();
-                    $producto->codigo = $row->item_code;
-                    $producto->codigo = $row->item_description;
+                    $producto->codigo = trim($row->item_code);
+                    $producto->descripcion = trim($row->item_description);
                     $producto->save();
                 }
 
@@ -220,47 +221,49 @@ class CorteController extends Controller
                     'descuento'=>floatval($row->discount)/10000,
                     'total'=>floatval($row->order_line_total)/10000
                 ]);
-
-                $validar_flete = false;
-                //se valida si el empresario a adquirido o no el kit de afiliación
-                if(!$empresario->validarKit()){
-                    //se valida si el kit es el item o producto relacionado
-                    if($producto->descripcion == 'KIT DE AFILIACION COLOMBIA'){
-                        $empresario->kit = 'si';
-                        $empresario->save();
-                        $validar_flete = true;
-                    }else{
-                        //corte pendiente y sin corte y envio de correo a soporte, push y correo a empresario
-                        $pedido->estado = 'pendiente';
-                        $pedido->save();
-                    }
-                }else{
-                    //el empresario si tiene kit
-                    $validar_flete = true;
-                }
-
-                //validacion de flete o costo de envio
-                if($validar_flete){
-                    //si tiene flete
-                    if($row->shipping_charge){
-                        $pedido->corte_id = $corte->id;
-                        $pedido->estado = 'en cola';
-                        $pedido->save();
-
-                        //se relacionan los pedidos pendientes con este corte
-                        $pedidos_pendientes = Pedido::where('empresario_id',$empresario->id)->where('estado','pendiente')->get();
-                        foreach ($pedidos_pendientes as $p_p){
-                            $p_p->corte_id = $corte->id;
-                            $p_p->estado = 'en cola';
-                            $p_p->save();
-                        }
-
-                        //enviar correo y push a empresario
-                    }
-                }
                 $i++;
             }
 
+            $pedidos_corte = $corte->pedidos;
+
+            //foreach para determinar el estado de cada pedido y su relacion con el corte
+            foreach ($pedidos_corte as $pedido){
+                $empresario = $pedido->empresario;
+                $empresario_kit = false;
+
+                //si el empresario tiene kit registrado
+                //o aparece en la lista de empresarios con kit
+                if($empresario->validarKit()){
+                    $empresario_kit = true;
+                }else{
+                    //se valida si en el pedido se envia el kit
+                    $productos_pedido = $pedido->productos;
+                    foreach ($productos_pedido as $producto){
+                        if($producto->descripcion == 'KIT DE AFILIACION COLOMBIA'){
+                            $empresario->kit = 'si';
+                            $empresario->save();
+                            $empresario_kit = true;
+                        }
+                    }
+                }
+
+                $en_cola = false;
+                //si el empresario tiene kit y flete debe quedar en cola y con la relacion con el corte
+                //de lo contrario se quita la relacion con el corte y se deja pendiente
+                if($empresario_kit){
+                    if($pedido->costo_envio){
+                        $en_cola = true;
+                    }
+                }
+
+                if($en_cola){
+                    $pedido->estadosPedidos()->save($estado_en_cola);
+                }else{
+                    $pedido->estadosPedidos()->save($estado_pendiente);
+                    $pedido->corte_id = null;
+                }
+                $pedido->save();
+            }
         });
 
         if(!$complete) {

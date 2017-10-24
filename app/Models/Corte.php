@@ -15,7 +15,7 @@ class Corte extends Model
     ];
 
     public function pedidos(){
-        return $this->hasMany(Pedido::class,'importacion_id');
+        return $this->hasMany(Pedido::class,'corte_id');
     }
 
     public function user(){
