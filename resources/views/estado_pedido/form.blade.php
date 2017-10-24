@@ -5,7 +5,27 @@
     if(!$estado_pedido->exists || ($estado_pedido->exists && $estado_pedido->notificacion_correo == 'no'))
         $select_disabled = true;
 
+    //determina si existe un estado que se utilicen cuando no se asigne un corte a un pedido
+    $no_asignacion_corte = \FuxionLogistic\Models\EstadoPedido::where('no_asignacion_corte','si')->count();
+
+    //determina si existe un estado que se utilicen cuando se asigne un corte a un pedido
+    $asignacion_corte = \FuxionLogistic\Models\EstadoPedido::where('asignacion_corte','si')->count();
 ?>
+
+@if(!$no_asignacion_corte && !$estado_pedido->exists)
+    <p class="alert alert-warning">
+        <strong>Importante!!</strong><br>
+        El estado que se registre en este momento será establecido como el estado que se asigne a los pedidos que no se relacionan con un corte por no tener
+        kit de afiliación o por no tener flete.
+    </p>
+@endif
+
+@if($no_asignacion_corte && (!$asignacion_corte && !$estado_pedido->exists))
+    <p class="alert alert-warning">
+        <strong>Importante!!</strong><br>
+        El estado que se registre en este momento será establecido como el estado que se asigne a los pedidos que se relacionan con un corte en la importación.
+    </p>
+@endif
 <div class="col-md-6 col-lg-4 form-group">
     {!! Form::label('nombre','Nombre (*)') !!}
     {!! Form::text('nombre',null,['id'=>'nombre','class'=>'form-control','maxlength'=>100]) !!}

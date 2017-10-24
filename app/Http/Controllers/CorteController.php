@@ -6,6 +6,7 @@ namespace FuxionLogistic\Http\Controllers;
 use FuxionLogistic\Models\Bodega;
 use FuxionLogistic\Models\Empresario;
 use FuxionLogistic\Models\Corte;
+use FuxionLogistic\Models\EstadoPedido;
 use FuxionLogistic\Models\Pedido;
 use FuxionLogistic\Models\Producto;
 use FuxionLogistic\User;
@@ -86,6 +87,15 @@ class CorteController extends Controller
         $error = '';
 
         Excel::load($request->file('archivo'),function ($reader) use (&$rol,&$error,&$complete){
+            $estado_pendiente = EstadoPedido::where('no_asignacion_corte','si')->first();
+            $estado_en_cola = EstadoPedido::where('asignacion_corte','si')->first();
+
+            if(!$estado_en_cola || !$estado_pendiente){
+                $error = 'Para registrar cortes asegurese de registrar los <a href="'.url("/estado-pedido/crear").'" target="_blank">estados del pedido</a> con corte asignado y pedido sin corte asignado.';
+                $complete = false;
+                return false;
+            }
+
             $results = $reader->all();
             DB::beginTransaction();
             //se crea un nuevo registro de importacion

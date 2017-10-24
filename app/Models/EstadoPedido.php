@@ -13,6 +13,8 @@ class EstadoPedido extends Model
         'descripcion',
         'notificacion_push',
         'notificacion_correo',
+        'defecto_no_kit',
+        'defecto_no_corte',
         'plantilla_correo_id',
     ];
 }
