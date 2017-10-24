@@ -47,3 +47,9 @@ Route::post('/solicitar-clave-trax',function (Request $request){
         return ['error'=>'No existe ning&uacuten usuario con el c&oacutedigo enviado'];
     }
 });
+
+Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() {
+    // Route::resource('modulo','v1\moduloController');
+    //Route::resource('subida','v1\uploadController');
+    Route::post('subida', 'v1\uploadController@store' );
+});

@@ -216,3 +216,24 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
             ->with('name',$name)->render();
     });
 });
+
+/**
+* ACCESO A IMAGENES DESDE LA APP
+ * Autor: Carlos Ramirez
+*/
+
+
+Route::get('images/{pedido_id}/{filename}', function ($pedido_id, $filename)
+{
+    $path = storage_path() . '/app/'.$pedido_id.'/'.$filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
