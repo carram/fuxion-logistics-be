@@ -219,6 +219,7 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
 
 /**
 * ACCESO A IMAGENES DESDE LA APP
+ * Autor: Carlos Ramirez
 */
 
 
