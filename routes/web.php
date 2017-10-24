@@ -216,3 +216,23 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
             ->with('name',$name)->render();
     });
 });
+
+/**
+* ACCESO A IMAGENES DESDE LA APP
+*/
+
+
+Route::get('images/{filename}', function ($filename)
+{
+    $path = storage_path() . '/app/subidas/movil/' . $filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
