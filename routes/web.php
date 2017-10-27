@@ -234,9 +234,9 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
 */
 
 
-Route::get('images/{pedido_id}/{filename}', function ($pedido_id, $filename)
+Route::get('images/{tipo}/{id}/{filename}', function ($tipo, $id, $filename)
 {
-    $path = storage_path() . '/app/'.$pedido_id.'/'.$filename;
+    $path = storage_path() . '/app/'.$tipo.'/'.$id.'/'.$filename;
 
     if(!File::exists($path)) abort(404);
 
