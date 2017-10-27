@@ -9,6 +9,10 @@ var cols = [
 ];
 $(function () {
     cargarTablaPedidosCorte();
+
+    $('.btn-solicitar-guias').click(function () {
+        solicitarGuias();
+    })
 })
 
 function cargarTablaPedidosCorte() {
@@ -31,4 +35,22 @@ function cargarTablaPedidosCorte() {
             },300);
         },
     });
+}
+
+function solicitarGuias() {
+    var params = {_token:$('#general_token').val()};
+    var url = $("#general_url").val()+"/corte/aplicar-malla-cobertura/"+$('#corte').val();
+
+    abrirBlockUiCargando('Aplicando malls de cobertura ');
+
+    $.post(url,params)
+        .done(function (data) {
+            if(data.success){
+                window.location.href = $('#general_url').val()+"/corte/guias/"+$('#corte').val();
+            }
+        })
+        .fail(function (jqXHR,state,error) {
+            abrirAlerta("alertas-pedidos-corte","danger",JSON.parse(jqXHR.responseText),null,"body");
+            cerrarBlockUiCargando();
+        })
 }

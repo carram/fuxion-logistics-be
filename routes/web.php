@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/prueba-correo',function (){
+    $usuario = \FuxionLogistic\User::find(110);
+    $pedido = \FuxionLogistic\Models\Pedido::find(271);
+    \FuxionLogistic\Models\Correo::pedidoEnCola($usuario->empresario,$pedido);
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -90,6 +96,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/guardar', 'CorteController@guardar');
         Route::get('/detalle/{id}', 'CorteController@detalle');
         Route::get('/lista-pedidos-corte/{id}', 'CorteController@listaPedidosCorte');
+        Route::post('/aplicar-malla-cobertura/{id}', 'CorteController@aplicarMallaCobertura');
+        Route::get('/guias/{id}', 'CorteController@guias');
+        Route::get('/guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@guiasOperadorLogistico');
+        Route::get('/lista-guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@listaGuiasOperadorLogistico');
+        Route::post('/reasignar-guias-operador-logistico', 'CorteController@reasignarGuiasOperadorLogistico');
     });
 
     /**

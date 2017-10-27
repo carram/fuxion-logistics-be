@@ -7,6 +7,9 @@ use FuxionLogistic\Models\Bodega;
 use FuxionLogistic\Models\Empresario;
 use FuxionLogistic\Models\Corte;
 use FuxionLogistic\Models\EstadoPedido;
+use FuxionLogistic\Models\Guia;
+use FuxionLogistic\Models\MallaCobertura;
+use FuxionLogistic\Models\OperadorLogistico;
 use FuxionLogistic\Models\Pedido;
 use FuxionLogistic\Models\Producto;
 use FuxionLogistic\User;
@@ -39,6 +42,9 @@ class CorteController extends Controller
     }
 
     public function lista(){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,4,$this->privilegio_superadministrador))
+            return redirect('/');
+
         $cortes = Corte::select('cortes.*',
             DB::raw('CONCAT(users.nombres," ",users.apellidos) as usuario'))
             ->join('users','cortes.user_id','=','users.id')
@@ -67,6 +73,8 @@ class CorteController extends Controller
     }
 
     public function guardar(Request $request){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,5,$this->privilegio_superadministrador))
+            return redirect('/');
         $rol = \FuxionLogistic\Models\Rol::where('empresarios','si')->first();
         if(!$rol){
             return response(['error'=>['Para realizar la importación de pedidos de forma manual es necesario que exista un rol asignable a empresarios.']],422);
@@ -287,6 +295,8 @@ class CorteController extends Controller
     }
 
     public function listaPedidosCorte($id){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,4,$this->privilegio_superadministrador))
+            return redirect('/');
         $corte = Corte::find($id);
         if(!$corte)return redirect('/corte');
 
@@ -324,5 +334,132 @@ class CorteController extends Controller
         return $table;
     }
 
+    public function aplicarMallaCobertura($id){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,2,$this->privilegio_superadministrador))
+            return response(['error'=>['Unauthorized.']],401);
+        $corte = Corte::find($id);
 
+        if(!$corte)return response(['error'=>['La información enviada es incorrecta.']],422);
+
+        DB::beginTransaction();
+        $pedidos = $corte->pedidos;
+
+        foreach ($pedidos as $pedido){
+            if(!$pedido->guia_id) {
+                //guia asignada a pedidos de la misma factura
+                $guia_factura = Guia::join('pedidos', 'guias.id', '=', 'pedidos.guia_id')
+                    ->where('pedidos.serie', $pedido->serie)
+                    ->where('pedidos.correlativo', $pedido->correlativo)->first();
+
+                if ($guia_factura) {
+                    $pedido->guia_id = $guia_factura->id;
+                    $pedido->save();
+                } else {//no tiene guia con que relacionar
+
+                    $empresario = $pedido->empresario;
+                    $malla_cobertura = MallaCobertura::where('destino', $empresario->ciudad)->first();
+                    if (!$malla_cobertura) return response(['error' => ['No existe una malla de cobertura destinada para ' . $empresario->ciudad]], 422);
+
+                    $guia = new Guia();
+                    $guia->malla_cobertura_id = $malla_cobertura->id;
+                    $guia->operador_logistico_id = $malla_cobertura->operador_logistico_id;
+                    $guia->save();
+                    $pedido->guia_id = $guia->id;
+                    $pedido->save();
+                }
+            }
+        }
+        DB::commit();
+        return ['success'=>true];
+
+    }
+
+    public function guias($id){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,4,$this->privilegio_superadministrador))
+            return redirect('/');
+
+        $corte = Corte::find($id);
+        if(!$corte)return redirect('/');
+        return view('corte.guias')->with('corte',$corte)->with('privilegio_superadministrador',$this->privilegio_superadministrador);
+    }
+
+    public function guiasOperadorLogistico($corte,$operadorLogistico){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,2,$this->privilegio_superadministrador))
+            return redirect('/');
+
+        $corte = Corte::find($corte);
+        $operador_logistico = OperadorLogistico::find($operadorLogistico);
+
+        if(!$corte || !$operador_logistico)return redirect('/');
+
+        return view('corte.guias_operador_logistico')
+            ->with('corte',$corte)
+            ->with('operador_logistico',$operador_logistico)
+            ->with('privilegio_superadministrador',$this->privilegio_superadministrador);
+    }
+
+    public function listaGuiasOperadorLogistico($corte,$operadorLogistico){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,4,$this->privilegio_superadministrador))
+            return redirect('/');
+
+        $corte = Corte::find($corte);
+        $operador_logistico = OperadorLogistico::find($operadorLogistico);
+
+        if(!$corte || !$operador_logistico)return redirect('/');
+
+        $guias = $operador_logistico->guias()
+            ->select(
+                'guias.*',
+                'pedidos.serie',
+                'empresarios.ciudad as destino',
+                'pedidos.correlativo',
+                'guias.created_at as fecha_guia',
+                'empresarios.tipo as tipo_empresario',
+                DB::raw('CONCAT(users.nombres," ",users.apellidos) as empresario')
+            )
+            ->join('pedidos','guias.id','=','pedidos.guia_id')
+            ->join('cortes','pedidos.corte_id','=','cortes.id')
+            ->join('empresarios','pedidos.empresario_id','=','empresarios.id')
+            ->join('users','empresarios.user_id','=','users.id')
+            ->where('cortes.id',$corte->id)
+            ->where('guias.estado','registrada')
+            ->get();
+
+        $table = Datatables::of($guias);//->removeColumn('id');
+
+        $table = $table->editColumn('seleccione',function ($row){
+            return '<input type="checkbox" name="guias[]" value="'.$row->id.'">';
+        })->rawColumns(['seleccione']);
+        $table = $table->make(true);
+        return $table;
+    }
+
+    public function reasignarGuiasOperadorLogistico(Request $request){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,2,$this->privilegio_superadministrador))
+            return response(['error'=>['Unauthorized.']],401);
+
+        if(!$request->has('guias'))
+            return response(['error'=>['No se ha seleccionado ningúna guía']],422);
+
+        if(!is_array($request->input('guias')))
+            return response(['error'=>['La información enviada es incorrecta']],422);
+
+        if(!$request->has('operador'))
+            return response(['error'=>['Seleccione un operador logístico']],422);
+
+        $operador_logistico = OperadorLogistico::find($request->input('operador'));
+
+        if(!$operador_logistico)
+            return response(['error'=>['La información enviada es incorrecta']],422);
+
+        foreach ($request->input('guias') as $id_guia){
+            $guia = Guia::where('estado','registrada')->find($id_guia);
+            if($guia->operador_logistico_id != $operador_logistico->id){
+                $guia->update(
+                    ['operador_logistico_id'=>$operador_logistico->id]
+                );
+            }
+        }
+        return ['success'=>true];
+    }
 }

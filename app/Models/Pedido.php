@@ -44,4 +44,8 @@ class Pedido extends Model
     public function estadosPedidos(){
         return $this->belongsToMany(EstadoPedido::class,'historial_estados_pedidos','pedido_id','estado_pedido_id');
     }
+
+    public function guia(){
+        return $this->belongsTo(Guia::class,'pedidos.guia_id');
+    }
 }
