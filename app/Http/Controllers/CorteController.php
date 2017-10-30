@@ -198,6 +198,7 @@ class CorteController extends Controller
                     $pedido->subtotal = floatval($row->subtotal)/10000;
                     $pedido->total_tax = floatval($row->total_tax)/10000;
                     $pedido->total = floatval($row->order_total)/10000;
+                    $pedido->descuento = floatval($row->discount)/10000;
                     $pedido->tipo_pago = $row->payment_type;
                     $pedido->volumen_comisionable = floatval($row->commissionable_volume)/10000;
                     $pedido->costo_envio = floatval($row->shipping_charge)/10000;
@@ -226,7 +227,6 @@ class CorteController extends Controller
                 $pedido->productos()->save($producto,[
                     'cantidad'=>floatval($row->quantity)/10000,
                     'precio_unitario'=>floatval($row->price_each)/10000,
-                    'descuento'=>floatval($row->discount)/10000,
                     'total'=>floatval($row->order_line_total)/10000
                 ]);
                 $i++;
@@ -346,12 +346,18 @@ class CorteController extends Controller
 
         foreach ($pedidos as $pedido){
             if(!$pedido->guia_id) {
-                //guia asignada a pedidos de la misma factura
-                $guia_factura = Guia::join('pedidos', 'guias.id', '=', 'pedidos.guia_id')
+                //guias con igual serie y correlativo donde se pueda agrupar el pedido
+                //solo se envia en una guía máximo dos pedidos, donde uno sea el kit de afiliación
+                $guia_factura = Guia::select('guias.*')
+                    ->join('pedidos', 'guias.id', '=', 'pedidos.guia_id')
+                    ->join('pedidos_productos', 'pedidos.id', '=', 'pedidos_productos.pedido_id')
+                    ->join('productos', 'pedidos_productos.producto_id', '=', 'productos.id')
                     ->where('pedidos.serie', $pedido->serie)
-                    ->where('pedidos.correlativo', $pedido->correlativo)->first();
+                    ->where('pedidos.correlativo', $pedido->correlativo)
+                    ->where('productos.descripcion','KIT DE AFILIACION COLOMBIA')->first();
 
-                if ($guia_factura) {
+
+                if ($guia_factura && $guia_factura->pedidos()->count()==1) {
                     $pedido->guia_id = $guia_factura->id;
                     $pedido->save();
                 } else {//no tiene guia con que relacionar

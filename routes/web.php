@@ -15,12 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/prueba-correo',function (){
-    $usuario = \FuxionLogistic\User::find(110);
-    $pedido = \FuxionLogistic\Models\Pedido::find(271);
-    \FuxionLogistic\Models\Correo::pedidoEnCola($usuario->empresario,$pedido);
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -247,4 +241,37 @@ Route::get('images/{tipo}/{id}/{filename}', function ($tipo, $id, $filename)
     $response->header("Content-Type", $type);
 
     return $response;
+});
+
+/**
+ *  PRUEBAS DEL SISTEMA
+ */
+
+Route::get('/prueba-correo',function (){
+    $usuario = \FuxionLogistic\User::find(110);
+    $pedido = \FuxionLogistic\Models\Pedido::find(271);
+    \FuxionLogistic\Models\Correo::pedidoEnCola($usuario->empresario,$pedido);
+});
+
+Route::get('/prueba-guzzle',function (){
+    $client = new \GuzzleHttp\Client();
+
+    $test_array = array (
+        'bla' => 'blub',
+        'foo' => 'bar',
+        'another_array' => array (
+            'stack' => 'overflow',
+        ),
+    );
+    $xml = new SimpleXMLElement('<root/>');
+    array_walk_recursive($test_array, array ($xml, 'addChild'));
+
+///   dd($xml->asXML());
+
+    $res = $client->request('POST',url('/api/prueba-api'),[
+       /*'param_1'=>'Hola',
+        'param_2'=>'Mundo',
+        'maram_3'=>$xml->asXML()*/
+    ]);
+    dd($res);
 });

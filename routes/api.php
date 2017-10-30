@@ -53,3 +53,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() {
     //Route::resource('subida','v1\uploadController');
     Route::post('subida', 'v1\uploadController@store' );
 });
+
+/**
+ * ESPACIO PARA PRUEBAS
+ */
+Route::post('/prueba-api',function (Request $request){
+    dd($request->isXmlHttpRequest());
+});

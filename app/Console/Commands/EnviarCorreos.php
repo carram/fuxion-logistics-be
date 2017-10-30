@@ -14,7 +14,7 @@ class EnviarCorreos extends Command
      *
      * @var string
      */
-    protected $signature = 'command:enviar-correos';
+    protected $signature = 'enviar-correos';
 
     /**
      * The console command description.

@@ -17,6 +17,7 @@ class Pedido extends Model
         'subtotal',
         'total_tax',
         'costo_envio',
+        'descuento',
         'total',
         'tipo_pago',
         'volumen_comisionable',
