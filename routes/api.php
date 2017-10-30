@@ -49,7 +49,12 @@ Route::post('/solicitar-clave-trax',function (Request $request){
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() {
-    // Route::resource('modulo','v1\moduloController');
-    //Route::resource('subida','v1\uploadController');
-    Route::post('subida', 'v1\uploadController@store' );
+    Route::post('subida', 'v1\UploadController@store' );
+    Route::resource('cortes', 'v1\CorteController');
+    Route::resource('pedidos', 'v1\PedidoController');
+});
+
+Route::group(['prefix' => 'v1'], function() {
+    Route::resource('factura', 'v1\FacturaController');
+
 });

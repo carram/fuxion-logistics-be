@@ -234,6 +234,7 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
 */
 
 
+
 Route::get('images/{tipo}/{id}/{filename}', function ($tipo, $id, $filename)
 {
     $path = storage_path() . '/app/'.$tipo.'/'.$id.'/'.$filename;
