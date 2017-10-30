@@ -349,17 +349,18 @@ class CorteController extends Controller
                 //guias con igual serie y correlativo donde se pueda agrupar el pedido
                 //solo se envia en una guía máximo dos pedidos, donde uno sea el kit de afiliación
                 $guia_factura = Guia::select('guias.*')
-                    ->join('pedidos', 'guias.id', '=', 'pedidos.guia_id')
+                    ->join('guias_pedidos', 'guias.id', '=', 'guias_pedidos.guia_id')
+                    ->join('pedidos', 'guias_pedidos.pedido_id', '=', 'pedidos.id')
                     ->join('pedidos_productos', 'pedidos.id', '=', 'pedidos_productos.pedido_id')
                     ->join('productos', 'pedidos_productos.producto_id', '=', 'productos.id')
                     ->where('pedidos.serie', $pedido->serie)
                     ->where('pedidos.correlativo', $pedido->correlativo)
+                    ->where('guias.estado','registrada')
                     ->where('productos.descripcion','KIT DE AFILIACION COLOMBIA')->first();
 
 
                 if ($guia_factura && $guia_factura->pedidos()->count()==1) {
-                    $pedido->guia_id = $guia_factura->id;
-                    $pedido->save();
+                    $guia_factura->pedidos()->save($pedido);
                 } else {//no tiene guia con que relacionar
 
                     $empresario = $pedido->empresario;
@@ -370,8 +371,7 @@ class CorteController extends Controller
                     $guia->malla_cobertura_id = $malla_cobertura->id;
                     $guia->operador_logistico_id = $malla_cobertura->operador_logistico_id;
                     $guia->save();
-                    $pedido->guia_id = $guia->id;
-                    $pedido->save();
+                    $guia->pedidos()->save($pedido);
                 }
             }
         }
@@ -383,7 +383,6 @@ class CorteController extends Controller
     public function guias($id){
         if(!Auth::user()->tieneFuncion($this->modulo_id,4,$this->privilegio_superadministrador))
             return redirect('/');
-
         $corte = Corte::find($id);
         if(!$corte)return redirect('/');
         return view('corte.guias')->with('corte',$corte)->with('privilegio_superadministrador',$this->privilegio_superadministrador);
@@ -423,7 +422,8 @@ class CorteController extends Controller
                 'empresarios.tipo as tipo_empresario',
                 DB::raw('CONCAT(users.nombres," ",users.apellidos) as empresario')
             )
-            ->join('pedidos','guias.id','=','pedidos.guia_id')
+            ->join('guias_pedidos','guias.id','=','guias_pedidos.guia_id')
+            ->join('pedidos','guias_pedidos.pedido_id','=','pedidos.id')
             ->join('cortes','pedidos.corte_id','=','cortes.id')
             ->join('empresarios','pedidos.empresario_id','=','empresarios.id')
             ->join('users','empresarios.user_id','=','users.id')
@@ -473,7 +473,8 @@ class CorteController extends Controller
         $corte = Corte::find($corte_id);
         $operador_logistico = OperadorLogistico::find($operador_logistico_id);
         $guias = $operador_logistico->guias()->select('guias.*')
-            ->join('pedidos','guias.id','=','pedidos.guia_id')
+            ->join('guias_pedidos','guias.id','=','guias_pedidos.guia_id')
+            ->join('pedidos','guias_pedidos.pedido_id','=','pedidos.id')
             ->join('cortes','pedidos.corte_id','=','cortes.id')
             ->where('cortes.id',$corte->id)
             ->where('guias.estado','registrada')

@@ -27,13 +27,15 @@ class OperadorLogistico extends Model
     public function guiasAsignadasPorCorte($corte,$count = false){
         if($count){
             return $this->guias()->select('guias.*')
-                ->join('pedidos','guias.id','=','pedidos.guia_id')
+                ->join('guias_pedidos','guias.id','=','guias_pedidos.guia_id')
+                ->join('pedidos','guias_pedidos.pedido_id','=','pedidos.id')
                 ->join('cortes','pedidos.corte_id','=','cortes.id')
                 ->where('cortes.id',$corte)
                 ->count();
         }else{
             return $this->guias()->select('guias.*')
-                ->join('pedidos','guias.id','=','pedidos.guia_id')
+                ->join('guias_pedidos','guias.id','=','guias_pedidos.guia_id')
+                ->join('pedidos','guias_pedidos.pedido_id','=','pedidos.id')
                 ->join('cortes','pedidos.corte_id','=','cortes.id')
                 ->where('cortes.id',$corte)
                 ->get();

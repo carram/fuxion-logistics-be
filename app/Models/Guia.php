@@ -10,11 +10,15 @@ class Guia extends Model
     protected $table = 'guias';
     protected $fillable = [
         'numero',
+        'estado',
         'operador_logistico_id',
+        'malla_cobertura_id',
+        'foto_1',
+        'foto_2',
     ];
 
     public function pedidos(){
-        return $this->hasMany(Pedido::class,'corte_id');
+        return $this->belongsToMany(Pedido::class,'guias_pedidos','guia_id','pedido_id');
     }
 
     public function operadorLogistico(){
