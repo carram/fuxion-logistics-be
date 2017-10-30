@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2017 a las 12:01:52
+-- Tiempo de generación: 30-10-2017 a las 13:43:02
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.3
 
@@ -1444,6 +1444,8 @@ CREATE TABLE `guias` (
   `id` int(10) UNSIGNED NOT NULL,
   `numero` varchar(150) DEFAULT NULL,
   `estado` enum('registrada','enviada','entregada') NOT NULL DEFAULT 'registrada',
+  `foto_1` int(10) UNSIGNED DEFAULT NULL,
+  `foto_2` int(10) UNSIGNED DEFAULT NULL,
   `malla_cobertura_id` int(10) UNSIGNED NOT NULL,
   `operador_logistico_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1454,21 +1456,21 @@ CREATE TABLE `guias` (
 -- Volcado de datos para la tabla `guias`
 --
 
-INSERT INTO `guias` (`id`, `numero`, `estado`, `malla_cobertura_id`, `operador_logistico_id`, `created_at`, `updated_at`) VALUES
-(81, NULL, 'registrada', 2, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(82, NULL, 'registrada', 3, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(83, NULL, 'registrada', 4, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(84, NULL, 'registrada', 4, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(85, NULL, 'registrada', 5, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(86, NULL, 'registrada', 7, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(87, NULL, 'registrada', 8, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(88, NULL, 'registrada', 5, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(89, NULL, 'registrada', 9, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(90, NULL, 'registrada', 9, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(91, NULL, 'registrada', 10, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(92, NULL, 'registrada', 11, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(93, NULL, 'registrada', 1, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
-(94, NULL, 'registrada', 8, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19');
+INSERT INTO `guias` (`id`, `numero`, `estado`, `foto_1`, `foto_2`, `malla_cobertura_id`, `operador_logistico_id`, `created_at`, `updated_at`) VALUES
+(81, NULL, 'registrada', NULL, NULL, 2, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(82, NULL, 'registrada', NULL, NULL, 3, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(83, NULL, 'registrada', NULL, NULL, 4, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(84, NULL, 'registrada', NULL, NULL, 4, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(85, NULL, 'registrada', NULL, NULL, 5, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(86, NULL, 'registrada', NULL, NULL, 7, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(87, NULL, 'registrada', NULL, NULL, 8, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(88, NULL, 'registrada', NULL, NULL, 5, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(89, NULL, 'registrada', NULL, NULL, 9, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(90, NULL, 'registrada', NULL, NULL, 9, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(91, NULL, 'registrada', NULL, NULL, 10, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(92, NULL, 'registrada', NULL, NULL, 11, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(93, NULL, 'registrada', NULL, NULL, 1, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19'),
+(94, NULL, 'registrada', NULL, NULL, 8, 1, '2017-10-30 16:20:19', '2017-10-30 16:20:19');
 
 -- --------------------------------------------------------
 
@@ -1479,9 +1481,7 @@ INSERT INTO `guias` (`id`, `numero`, `estado`, `malla_cobertura_id`, `operador_l
 CREATE TABLE `guias_pedidos` (
   `id` int(10) UNSIGNED NOT NULL,
   `guia_id` int(10) UNSIGNED NOT NULL,
-  `pedido_id` int(10) UNSIGNED NOT NULL,
-  `foto_1` int(10) UNSIGNED DEFAULT NULL,
-  `foto_2` int(10) UNSIGNED DEFAULT NULL
+  `pedido_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2377,7 +2377,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('4VM04Th12nvjAn4NNssWNetUI54jVVSV19E01Z49', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoieXlUWnpqUXJyRkMzYmd0NG9Xdjk2b0I3ZVlUVDIzZ1JnNUVWWnZMTCI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTk6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9ndWlhcy1vcGVyYWRvci1sb2dpc3RpY28vOC8xIjt9czoyMjoiUEhQREVCVUdCQVJfU1RBQ0tfREFUQSI7YTowOnt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1509381088),
+('4VM04Th12nvjAn4NNssWNetUI54jVVSV19E01Z49', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoieXlUWnpqUXJyRkMzYmd0NG9Xdjk2b0I3ZVlUVDIzZ1JnNUVWWnZMTCI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTI6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9ndWlhcy1hdXRvbWF0aWNhcy84LzEiO31zOjIyOiJQSFBERUJVR0JBUl9TVEFDS19EQVRBIjthOjA6e31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1509383740),
 ('f0aoX0Fldsc47nGR32BLSMHBt5N01U0Bnfwc17h1', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiajRXVEhqaUlOWjN2eFdvQ0pLY0pUcUhrSDNZaXV0cUptd05La1dRVCI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9wcnVlYmEtZ3V6emxlIjt9czoyMjoiUEhQREVCVUdCQVJfU1RBQ0tfREFUQSI7YTowOnt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1509139997),
 ('QdGgnKDK1XfJscOoTGJMnPsXPuIMMrGFEqSGZuUj', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNURMdVdQNDBRVmN5VjZjRnJCOWtxbU1ZM1BvTHY2Z1didEIzYkxnYSI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC91c3VhcmlvL2NyZWF0ZSI7fXM6MjI6IlBIUERFQlVHQkFSX1NUQUNLX0RBVEEiO2E6MDp7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1509036618),
 ('vxRiC8khwErQX5svVvKZk7mAzy43bPBXCffpkMfh', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoic2xuN3N0c1BYOGFBb0R1YUx0YjYwQmRjeE5jZFQ3NDZGazBVeUxZVyI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9wbGFudGlsbGEtY29ycmVvIjt9czoyMjoiUEhQREVCVUdCQVJfU1RBQ0tfREFUQSI7YTowOnt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1508978606);
@@ -2596,7 +2596,9 @@ ALTER TABLE `funciones`
 ALTER TABLE `guias`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_guias_mallas_cobertura1_idx` (`malla_cobertura_id`),
-  ADD KEY `fk_guias_operadores_logisticos1_idx` (`operador_logistico_id`);
+  ADD KEY `fk_guias_operadores_logisticos1_idx` (`operador_logistico_id`),
+  ADD KEY `fk_guias_archivos1_idx` (`foto_1`),
+  ADD KEY `fk_guias_archivos2_idx` (`foto_2`);
 
 --
 -- Indices de la tabla `guias_pedidos`
@@ -2604,9 +2606,7 @@ ALTER TABLE `guias`
 ALTER TABLE `guias_pedidos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_guias_has_pedidos_pedidos1_idx` (`pedido_id`),
-  ADD KEY `fk_guias_has_pedidos_guias1_idx` (`guia_id`),
-  ADD KEY `fk_guias_pedidos_archivos1_idx` (`foto_1`),
-  ADD KEY `fk_guias_pedidos_archivos2_idx` (`foto_2`);
+  ADD KEY `fk_guias_has_pedidos_guias1_idx` (`guia_id`);
 
 --
 -- Indices de la tabla `historial_estados_pedidos`
@@ -3011,6 +3011,8 @@ ALTER TABLE `estados_pedidos`
 -- Filtros para la tabla `guias`
 --
 ALTER TABLE `guias`
+  ADD CONSTRAINT `fk_guias_archivos1` FOREIGN KEY (`foto_1`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `fk_guias_archivos2` FOREIGN KEY (`foto_2`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `fk_guias_mallas_cobertura1` FOREIGN KEY (`malla_cobertura_id`) REFERENCES `mallas_cobertura` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_guias_operadores_logisticos1` FOREIGN KEY (`operador_logistico_id`) REFERENCES `operadores_logisticos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -3019,9 +3021,7 @@ ALTER TABLE `guias`
 --
 ALTER TABLE `guias_pedidos`
   ADD CONSTRAINT `fk_guias_has_pedidos_guias1` FOREIGN KEY (`guia_id`) REFERENCES `guias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_guias_has_pedidos_pedidos1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_guias_pedidos_archivos1` FOREIGN KEY (`foto_1`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `fk_guias_pedidos_archivos2` FOREIGN KEY (`foto_2`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+  ADD CONSTRAINT `fk_guias_has_pedidos_pedidos1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `historial_estados_pedidos`

@@ -469,8 +469,15 @@ class CorteController extends Controller
         return ['success'=>true];
     }
 
-    public function guiasAutomaticas($guia){
-        $guia = Guia::find($guia);
-        dd($guia);
+    public function guiasAutomaticas($corte_id,$operador_logistico_id){
+        $corte = Corte::find($corte_id);
+        $operador_logistico = OperadorLogistico::find($operador_logistico_id);
+        $guias = $operador_logistico->guias()->select('guias.*')
+            ->join('pedidos','guias.id','=','pedidos.guia_id')
+            ->join('cortes','pedidos.corte_id','=','cortes.id')
+            ->where('cortes.id',$corte->id)
+            ->where('guias.estado','registrada')
+            ->get();
+        dd($guias);
     }
 }
