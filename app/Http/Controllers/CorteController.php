@@ -468,4 +468,9 @@ class CorteController extends Controller
         }
         return ['success'=>true];
     }
+
+    public function guiasAutomaticas($guia){
+        $guia = Guia::find($guia);
+        dd($guia);
+    }
 }
