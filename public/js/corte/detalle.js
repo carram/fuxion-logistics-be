@@ -41,7 +41,7 @@ function solicitarGuias() {
     var params = {_token:$('#general_token').val()};
     var url = $("#general_url").val()+"/corte/aplicar-malla-cobertura/"+$('#corte').val();
 
-    abrirBlockUiCargando('Aplicando malls de cobertura ');
+    abrirBlockUiCargando('Aplicando malla de cobertura ');
 
     $.post(url,params)
         .done(function (data) {

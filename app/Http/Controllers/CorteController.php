@@ -267,7 +267,11 @@ class CorteController extends Controller
                 if($en_cola){
                     $pedido->estadosPedidos()->save($estado_en_cola);
                 }else{
-                    $pedido->estadosPedidos()->save($estado_pendiente);
+                    if(!$empresario_kit) {
+                        $pedido->estadosPedidos()->save($estado_pendiente,['razon_estado'=>'Pendiente por kit']);
+                    }else {
+                        $pedido->estadosPedidos()->save($estado_pendiente,['razon_estado'=>'Pendiente por flete']);
+                    }
                     $pedido->corte_id = null;
                 }
                 $pedido->save();
@@ -340,6 +344,7 @@ class CorteController extends Controller
         $corte = Corte::find($id);
 
         if(!$corte)return response(['error'=>['La información enviada es incorrecta.']],422);
+        if($corte->guias_asignadas == 'si')return ['success'=>true];
 
         DB::beginTransaction();
         $pedidos = $corte->pedidos;
@@ -375,6 +380,8 @@ class CorteController extends Controller
                 }
             }
         }
+        $corte->guias_asignadas = 'si';
+        $corte->save();
         DB::commit();
         return ['success'=>true];
 
@@ -469,16 +476,104 @@ class CorteController extends Controller
         return ['success'=>true];
     }
 
-    public function guiasAutomaticas($corte_id,$operador_logistico_id){
+    public function descargaGuias($corte_id,$operador_logistico_id){
         $corte = Corte::find($corte_id);
         $operador_logistico = OperadorLogistico::find($operador_logistico_id);
-        $guias = $operador_logistico->guias()->select('guias.*')
-            ->join('guias_pedidos','guias.id','=','guias_pedidos.guia_id')
-            ->join('pedidos','guias_pedidos.pedido_id','=','pedidos.id')
-            ->join('cortes','pedidos.corte_id','=','cortes.id')
-            ->where('cortes.id',$corte->id)
-            ->where('guias.estado','registrada')
-            ->get();
-        dd($guias);
+        return $operador_logistico->excelGuias($corte->id);
+    }
+
+    public function guiasManuales($corte_id){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,2,$this->privilegio_superadministrador))
+            return redirect('/');
+        $corte = Corte::find($corte_id);
+        if(!$corte)return redirect('/');
+        return view('corte.guias_manuales')->with('corte',$corte)->with('privilegio_superadministrador',$this->privilegio_superadministrador);
+    }
+
+    public function procesarGuiasManuales(Request $request){
+        if(!Auth::user()->tieneFuncion($this->modulo_id,2,$this->privilegio_superadministrador))
+            return redirect('/');
+
+        $rules = [
+            'archivo'=>'required|file|mimes:xlsx,xls|max:1000',
+            'corte'=>'required|exists:cortes,id',
+            'operador_logistico'=>'required|exists:operadores_logisticos,id',
+        ];
+
+        $mensajes = [
+            'archivo.required'=>'Seleccione un archivo.',
+            'archivo.file'=>'Seleccione un archivo',
+            'archivo.mimes'=>'El archivo seleccionado debe ser de tipo .xls o .xlsx.',
+            'archivo.max'=>'El tamaño maximo del archivo es de 1MB',
+            'corte.required'=>'La información enviada es incorrecta',
+            'corte.exists'=>'La información enviada es incorrecta',
+            'operador_logistico.required'=>'La información enviada es incorrecta',
+            'operador_logistico.exists'=>'La información enviada es incorrecta',
+        ];
+
+        $this->validate($request,$rules,$mensajes);
+        $error = false;
+        $mensaje_error = '';
+        $guias_relacionadas = 0;
+        DB::beginTransaction();
+        Excel::load($request->file('archivo'),function ($reader) use ($request,&$error,&$mensaje_error,&$guias_relacionadas){
+            $corte = Corte::find($request->corte);
+            $operador_logistico = OperadorLogistico::find($request->operador_logistico);
+            $results = $reader->all();
+            foreach ($results as $row){
+                if((strtolower($operador_logistico->nombre) == 'servientrega' && array_key_exists('numero_documento_cliente2',$row) && array_key_exists('numero_guia',$row))
+                    || (strtolower($operador_logistico->nombre) == 'deprisa' && array_key_exists('referencia',$row) && array_key_exists('envio',$row))) {
+
+                    if (strtolower($operador_logistico->nombre) == 'deprisa') {
+                        $numero_guia = $row['envio'];
+                        $serie = explode('-', $row['referencia'])[0];
+                        $correlativo = explode('-', $row['referencia'])[1];
+                    } else if (strtolower($operador_logistico->nombre) == 'servientrega') {
+                        $numero_guia = $row['numero_guia'];
+                        $serie = explode('-', $row['numero_documento_cliente2'])[0];
+                        $correlativo = explode('-', $row['numero_documento_cliente2'])[1];
+                    }
+
+                    $guia = Guia::select('guias.*')
+                        ->join('guias_pedidos', 'guias.id', '=', 'guias_pedidos.guia_id')
+                        ->join('pedidos', 'guias_pedidos.pedido_id', '=', 'pedidos.id')
+                        ->join('cortes', 'pedidos.corte_id', '=', 'cortes.id')
+                        ->where('cortes.id', $corte->id)
+                        ->where('pedidos.serie', $serie)
+                        ->where('pedidos.correlativo', $correlativo)
+                        ->where('guias.operador_logistico_id', $operador_logistico->id)
+                        ->where('guias.estado', 'registrada')->first();
+
+                    if(!$guia) {
+                        $error = true;
+                        $mensaje_error = 'No se ha encontrado pedido con serie-correlativo ' . $serie . '-' . $correlativo . ' para el corte y operador logístico actual.';
+                        return false;
+                    }
+
+                    if(!$guia->numero){
+                        $guia->numero = $numero_guia;
+                        $guia->save();
+                        $guias_relacionadas++;
+                    }
+                }
+            }
+        });
+
+        if($error){
+            DB::rollBack();
+            return response(['error'=>[$mensaje_error]],422);
+        }else{
+            DB::commit();
+            return ['success'=>true,'guias_relacionadas'=>$guias_relacionadas];
+        }
+    }
+
+    public function guiasAutomaticas($corte_id){
+        $corte = Corte::find($corte_id);
+        if(!$corte)
+        $operadores_logisticos = OperadorLogistico::where('ws','si')->get();
+        foreach ($operadores_logisticos as $operador_logistico){
+            $operador_logistico->enviarGuiasAutomaticas($corte->id);
+        }
     }
 }

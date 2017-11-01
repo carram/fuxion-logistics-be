@@ -95,7 +95,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@guiasOperadorLogistico');
         Route::get('/lista-guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@listaGuiasOperadorLogistico');
         Route::post('/reasignar-guias-operador-logistico', 'CorteController@reasignarGuiasOperadorLogistico');
-        Route::get('/guias-automaticas/{corte_id}/{operador_logistico_id}', 'CorteController@guiasAutomaticas');
+        Route::get('/descarga-guias/{corte_id}/{operador_logistico_id}', 'CorteController@descargaGuias');
+        Route::get('/guias-manuales/{corte_id}', 'CorteController@guiasManuales');
+        Route::post('/procesar-guias-manuales', 'CorteController@procesarGuiasManuales');
+        Route::get('/guias-automaticas/{corte_id}', 'CorteController@guiasAutomaticas');
     });
 
     /**

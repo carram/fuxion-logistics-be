@@ -5,10 +5,10 @@
         <div class="row">
             <p class="titulo_principal margin-bottom-20">
                 Pedidos en corte #{{$corte->numero}}
-                @if($corte->guias_asignadas == 'si')
+                @if($corte->guias_asignadas == 'no')
                     <a href="#!" class="right text-primary font-medium margin-top-5 btn-solicitar-guias">Solicitar guías</a>
                 @else
-                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="right text-primary font-medium margin-top-5 btn-solicitar-guias">Solicitar guías</a>
+                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="right text-primary font-medium margin-top-5">Solicitar guías</a>
                 @endif
             </p>
 
@@ -28,10 +28,10 @@
                 </thead>
             </table>
             <div class="col-xs-12 margin-top-20">
-                @if($corte->guias_asignadas == 'si')
+                @if($corte->guias_asignadas == 'no')
                     <a href="#!" class="btn btn-primary right btn-solicitar-guias">Solicitar guías</a>
                 @else
-                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="btn btn-primary right btn-solicitar-guias">Solicitar guías</a>
+                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="btn btn-primary right">Solicitar guías</a>
                 @endif
             </div>
         </div>
