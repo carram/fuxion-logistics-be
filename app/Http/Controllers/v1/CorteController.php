@@ -5,6 +5,7 @@ namespace FuxionLogistic\Http\Controllers\v1;
 use Illuminate\Http\Request;
 use FuxionLogistic\Http\Controllers\Controller;
 use FuxionLogistic\Models\Corte;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CorteController extends Controller
@@ -17,7 +18,15 @@ class CorteController extends Controller
     public function index()
     {
         //
-        return response(["data" => "En el index"]);
+        $cortes = Corte::select('cortes.*',
+            //DB::raw("(@cnt := @cnt + 1) AS key_k"),
+            DB::raw('CONCAT(users.nombres," ",users.apellidos) as usuario'))
+            ->join('users','cortes.user_id','=','users.id')
+            //->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy "))
+            ->where('cortes.user_id',Auth::user()->id)
+            ->get();
+
+        return response(["data" => $cortes]);
     }
 
     /**
@@ -49,15 +58,8 @@ class CorteController extends Controller
      */
     public function show($id)
     {
-        $cortes = Corte::select('cortes.*',
-            //DB::raw("(@cnt := @cnt + 1) AS key_k"),
-            DB::raw('CONCAT(users.nombres," ",users.apellidos) as usuario'))
-            ->join('users','cortes.user_id','=','users.id')
-            //->crossJoin(DB::raw("(SELECT @cnt := 0) as dummy "))
-            ->where('cortes.user_id',$id)
-            ->get();
 
-        return response(["data" => $cortes]);
+
     }
 
     /**
