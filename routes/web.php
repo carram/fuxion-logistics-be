@@ -20,7 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/usuario/validar-cuenta/{id}/{token}', 'UsuarioController@validarCuenta')->middleware('guest');
 Route::post('/usuario/validar-cuenta', 'UsuarioController@validarCuentaSend')->middleware('guest');
-Route::get('/ws', 'SoapController@show');
 
 /**
  * IMAGENES DEL SISTEMA
@@ -280,3 +279,5 @@ Route::get('/prueba-guzzle',function (){
     ]);
     dd($res);
 });
+
+Route::get('/ws', 'SoapController@show');

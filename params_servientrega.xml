@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:ns1="http://tempuri.org/">
+    <env:Header>
+        <ns1:AuthHeader>
+            <ns1:login>luis1937</ns1:login>
+            <ns1:pwd>MZR0zNqnI/KplFlYXiFk7m8/G/Iqxb3O</ns1:pwd>
+            <ns1:Id_CodFacturacion>SER408</ns1:Id_CodFacturacion>
+            <ns1:Nombre_Cargue>INTEGRACION INFO_CLIENTE</ns1:Nombre_Cargue>
+        </ns1:AuthHeader>
+    </env:Header>
+    <env:Body>
+        <ns1:CargueMasivoExterno>
+            <ns1:envios>
+                <ns1:CargueMasivoExternoDTO>
+                    <ns1:objEnvios>
+                        <ns1:EnviosExterno>
+                            <ns1:Num_Guia>0</ns1:Num_Guia>
+                            <ns1:Num_Sobreporte>0</ns1:Num_Sobreporte>
+                            <ns1:Doc_Relacionado/>
+                            <ns1:Num_Piezas>1</ns1:Num_Piezas>
+                            <ns1:Des_TipoTrayecto>1</ns1:Des_TipoTrayecto>
+                            <ns1:Ide_Producto>2</ns1:Ide_Producto><!--ENVIO CON PRODUCTO PREMIER-->
+                            <ns1:Des_FormaPago>2</ns1:Des_FormaPago>
+                            <ns1:Des_MedioTransporte>1</ns1:Des_MedioTransporte>
+                            <ns1:Num_PesoTotal>3</ns1:Num_PesoTotal>
+                            <ns1:Num_ValorDeclaradoTotal>5500.00</ns1:Num_ValorDeclaradoTotal>
+                            <ns1:Num_VolumenTotal>0</ns1:Num_VolumenTotal>
+                            <ns1:Num_BolsaSeguridad>0</ns1:Num_BolsaSeguridad>
+                            <ns1:Num_Precinto>0</ns1:Num_Precinto>
+                            <ns1:Des_TipoDuracionTrayecto>1</ns1:Des_TipoDuracionTrayecto>
+                            <ns1:Des_Telefono>3209179277</ns1:Des_Telefono>
+                            <ns1:Des_Ciudad>Popayan</ns1:Des_Ciudad><!-- Ó CON CODIGO DANE DE LA CIUDAD DESTINO -->
+                            <ns1:Des_Direccion>Carrera 33 #4-84</ns1:Des_Direccion>
+                            <ns1:Nom_Contacto>Jose Luis Capote</ns1:Nom_Contacto>
+                            <ns1:Des_VlrCampoPersonalizado1 />
+                            <ns1:Num_ValorLiquidado>0</ns1:Num_ValorLiquidado>
+                            <ns1:Des_DiceContener>Indumentaria</ns1:Des_DiceContener>
+                            <ns1:Des_TipoGuia>1</ns1:Des_TipoGuia>
+                            <ns1:Num_VlrSobreflete>0</ns1:Num_VlrSobreflete>
+                            <ns1:Num_VlrFlete>0</ns1:Num_VlrFlete>
+                            <ns1:Num_Descuento>0</ns1:Num_Descuento>
+                            <ns1:idePaisOrigen>1</ns1:idePaisOrigen>
+                            <ns1:idePaisDestino>1</ns1:idePaisDestino>
+                            <ns1:Des_IdArchivoOrigen />
+                            <ns1:Des_DireccionRemitente/><!--Opcional-->
+                            <ns1:Num_PesoFacturado>0</ns1:Num_PesoFacturado>
+                            <ns1:Est_CanalMayorista>false</ns1:Est_CanalMayorista>
+                            <ns1:Num_IdentiRemitente />
+                            <ns1:Num_TelefonoRemitente />
+                            <ns1:Num_Alto>1</ns1:Num_Alto>
+                            <ns1:Num_Ancho>1</ns1:Num_Ancho>
+                            <ns1:Num_Largo>1</ns1:Num_Largo>
+                            <ns1:Des_DepartamentoDestino>Cauca</ns1:Des_DepartamentoDestino>
+                            <ns1:Des_DepartamentoOrigen>Cundinamarca</ns1:Des_DepartamentoOrigen>
+                            <ns1:Gen_Cajaporte>false</ns1:Gen_Cajaporte>
+                            <ns1:Gen_Sobreporte>false</ns1:Gen_Sobreporte>
+                            <ns1:Nom_UnidadEmpaque>GENERICA</ns1:Nom_UnidadEmpaque>
+                            <ns1:Nom_RemitenteCanal />
+                            <ns1:Des_UnidadLongitud>cm</ns1:Des_UnidadLongitud>
+                            <ns1:Des_UnidadPeso>kg</ns1:Des_UnidadPeso>
+                            <ns1:Num_ValorDeclaradoSobreTotal>0</ns1:Num_ValorDeclaradoSobreTotal>
+                            <ns1:Num_Factura>FACT-001</ns1:Num_Factura>
+                            <ns1:Des_CorreoElectronico>jlcapote@misena.ecu.co</ns1:Des_CorreoElectronico>
+                        </ns1:EnviosExterno>
+
+                        <ns1:EnviosExterno>
+                            <ns1:Num_Guia>0</ns1:Num_Guia>
+                            <ns1:Num_Sobreporte>0</ns1:Num_Sobreporte>
+                            <ns1:Doc_Relacionado/>
+                            <ns1:Num_Piezas>1</ns1:Num_Piezas>
+                            <ns1:Des_TipoTrayecto>1</ns1:Des_TipoTrayecto>
+                            <ns1:Ide_Producto>2</ns1:Ide_Producto><!--ENVIO CON PRODUCTO PREMIER-->
+                            <ns1:Des_FormaPago>2</ns1:Des_FormaPago>
+                            <ns1:Des_MedioTransporte>1</ns1:Des_MedioTransporte>
+                            <ns1:Num_PesoTotal>3</ns1:Num_PesoTotal>
+                            <ns1:Num_ValorDeclaradoTotal>5600.00</ns1:Num_ValorDeclaradoTotal>
+                            <ns1:Num_VolumenTotal>0</ns1:Num_VolumenTotal>
+                            <ns1:Num_BolsaSeguridad>0</ns1:Num_BolsaSeguridad>
+                            <ns1:Num_Precinto>0</ns1:Num_Precinto>
+                            <ns1:Des_TipoDuracionTrayecto>1</ns1:Des_TipoDuracionTrayecto>
+                            <ns1:Des_Telefono>8232385</ns1:Des_Telefono>
+                            <ns1:Des_Ciudad>Popayan</ns1:Des_Ciudad><!-- Ó CON CODIGO DANE DE LA CIUDAD DESTINO -->
+                            <ns1:Des_Direccion>Carrera 37 #4-01</ns1:Des_Direccion>
+                            <ns1:Nom_Contacto>NOmbre contacto</ns1:Nom_Contacto>
+                            <ns1:Des_VlrCampoPersonalizado1 />
+                            <ns1:Num_ValorLiquidado>0</ns1:Num_ValorLiquidado>
+                            <ns1:Des_DiceContener>Indumentaria</ns1:Des_DiceContener>
+                            <ns1:Des_TipoGuia>1</ns1:Des_TipoGuia>
+                            <ns1:Num_VlrSobreflete>0</ns1:Num_VlrSobreflete>
+                            <ns1:Num_VlrFlete>0</ns1:Num_VlrFlete>
+                            <ns1:Num_Descuento>0</ns1:Num_Descuento>
+                            <ns1:idePaisOrigen>1</ns1:idePaisOrigen>
+                            <ns1:idePaisDestino>1</ns1:idePaisDestino>
+                            <ns1:Des_IdArchivoOrigen />
+                            <ns1:Des_DireccionRemitente/><!--Opcional-->
+                            <ns1:Num_PesoFacturado>0</ns1:Num_PesoFacturado>
+                            <ns1:Est_CanalMayorista>false</ns1:Est_CanalMayorista>
+                            <ns1:Num_IdentiRemitente />
+                            <ns1:Num_TelefonoRemitente />
+                            <ns1:Num_Alto>1</ns1:Num_Alto>
+                            <ns1:Num_Ancho>1</ns1:Num_Ancho>
+                            <ns1:Num_Largo>1</ns1:Num_Largo>
+                            <ns1:Des_DepartamentoDestino>Cauca</ns1:Des_DepartamentoDestino>
+                            <ns1:Des_DepartamentoOrigen>Cundinamarca</ns1:Des_DepartamentoOrigen>
+                            <ns1:Gen_Cajaporte>false</ns1:Gen_Cajaporte>
+                            <ns1:Gen_Sobreporte>false</ns1:Gen_Sobreporte>
+                            <ns1:Nom_UnidadEmpaque>GENERICA</ns1:Nom_UnidadEmpaque>
+                            <ns1:Nom_RemitenteCanal />
+                            <ns1:Des_UnidadLongitud>cm</ns1:Des_UnidadLongitud>
+                            <ns1:Des_UnidadPeso>kg</ns1:Des_UnidadPeso>
+                            <ns1:Num_ValorDeclaradoSobreTotal>0</ns1:Num_ValorDeclaradoSobreTotal>
+                            <ns1:Num_Factura>FACT-002</ns1:Num_Factura>
+                            <ns1:Des_CorreoElectronico>correo@correo.co</ns1:Des_CorreoElectronico>
+                        </ns1:EnviosExterno>
+                    </ns1:objEnvios>
+                </ns1:CargueMasivoExternoDTO>
+            </ns1:envios>
+            <ns1:arrayGuias />
+        </ns1:CargueMasivoExterno>
+    </env:Body>
+</env:Envelope>
