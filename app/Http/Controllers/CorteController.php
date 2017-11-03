@@ -266,6 +266,9 @@ class CorteController extends Controller
 
                 if($en_cola){
                     $pedido->estadosPedidos()->save($estado_en_cola);
+                    //******************************************************
+                    //buscar pedido pendiente por kit y relacionar con corte
+
                 }else{
                     if(!$empresario_kit) {
                         $pedido->estadosPedidos()->save($estado_pendiente,['razon_estado'=>'Pendiente por kit']);
@@ -277,6 +280,9 @@ class CorteController extends Controller
                 $pedido->save();
             }
         });
+
+        //******************************************
+        //relacionar pedidos pendientes sin razón de estado
 
         if(!$complete) {
             DB::rollBack();
