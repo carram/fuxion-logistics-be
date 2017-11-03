@@ -5,6 +5,7 @@ namespace FuxionLogistic\Http\Controllers;
 use FuxionLogistic\Http\Requests\UsuarioRequest;
 use FuxionLogistic\Mail\NuevaCuenta;
 use FuxionLogistic\Models\Archivo;
+use FuxionLogistic\Models\Correo;
 use FuxionLogistic\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +79,6 @@ class UsuarioController extends Controller
         //se envia correo para crear la contraseña de usuario
         Mail::to($user)->send(new NuevaCuenta($user));
         DB::commit();
-
         return ['success'=>true];
     }
 

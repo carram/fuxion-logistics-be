@@ -20,7 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/usuario/validar-cuenta/{id}/{token}', 'UsuarioController@validarCuenta')->middleware('guest');
 Route::post('/usuario/validar-cuenta', 'UsuarioController@validarCuentaSend')->middleware('guest');
-Route::get('/ws', 'SoapController@show');
 
 /**
  * IMAGENES DEL SISTEMA
@@ -90,6 +89,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/guardar', 'CorteController@guardar');
         Route::get('/detalle/{id}', 'CorteController@detalle');
         Route::get('/lista-pedidos-corte/{id}', 'CorteController@listaPedidosCorte');
+        Route::post('/aplicar-malla-cobertura/{id}', 'CorteController@aplicarMallaCobertura');
+        Route::get('/guias/{id}', 'CorteController@guias');
+        Route::get('/guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@guiasOperadorLogistico');
+        Route::get('/lista-guias-operador-logistico/{corte}/{operadorLogistico}', 'CorteController@listaGuiasOperadorLogistico');
+        Route::post('/reasignar-guias-operador-logistico', 'CorteController@reasignarGuiasOperadorLogistico');
+        Route::get('/descarga-guias/{corte_id}/{operador_logistico_id}', 'CorteController@descargaGuias');
+        Route::get('/guias-manuales/{corte_id}', 'CorteController@guiasManuales');
+        Route::post('/procesar-guias-manuales', 'CorteController@procesarGuiasManuales');
+        Route::get('/guias-automaticas/{corte_id}', 'CorteController@guiasAutomaticas');
     });
 
     /**
@@ -219,12 +227,14 @@ Route::group(['prefix' => 'tareas-sistema'],function (){
 
 /**
 * ACCESO A IMAGENES DESDE LA APP
+ * Autor: Carlos Ramirez
 */
 
 
-Route::get('images/{pedido_id}/{filename}', function ($pedido_id, $filename)
+
+Route::get('images/{tipo}/{id}/{filename}', function ($tipo, $id, $filename)
 {
-    $path = storage_path() . '/app/'.$pedido_id.'/' . $filename;
+    $path = storage_path() . '/app/'.$tipo.'/'.$id.'/'.$filename;
 
     if(!File::exists($path)) abort(404);
 
@@ -236,3 +246,38 @@ Route::get('images/{pedido_id}/{filename}', function ($pedido_id, $filename)
 
     return $response;
 });
+
+/**
+ *  PRUEBAS DEL SISTEMA
+ */
+
+Route::get('/prueba-correo',function (){
+    $usuario = \FuxionLogistic\User::find(110);
+    $pedido = \FuxionLogistic\Models\Pedido::find(271);
+    \FuxionLogistic\Models\Correo::pedidoEnCola($usuario->empresario,$pedido);
+});
+
+Route::get('/prueba-guzzle',function (){
+    $client = new \GuzzleHttp\Client();
+
+    $test_array = array (
+        'bla' => 'blub',
+        'foo' => 'bar',
+        'another_array' => array (
+            'stack' => 'overflow',
+        ),
+    );
+    $xml = new SimpleXMLElement('<root/>');
+    array_walk_recursive($test_array, array ($xml, 'addChild'));
+
+///   dd($xml->asXML());
+
+    $res = $client->request('POST',url('/api/prueba-api'),[
+       /*'param_1'=>'Hola',
+        'param_2'=>'Mundo',
+        'maram_3'=>$xml->asXML()*/
+    ]);
+    dd($res);
+});
+
+Route::get('/ws', 'SoapController@show');

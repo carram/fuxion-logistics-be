@@ -77,8 +77,20 @@ class EstadoPedidoController extends Controller
         if(!Auth::user()->tieneFuncion($this->modulo_id,1,$this->privilegio_superadministrador))
             return response(['error'=>['Unathorized.']],401);
 
+        $no_asignacion_corte = EstadoPedido::where('no_asignacion_corte','si')->count();
+
         $estado_pedido = new EstadoPedido();
         $estado_pedido->fill($request->all());
+
+        if(!$no_asignacion_corte) {
+            $estado_pedido->no_asignacion_corte = 'si';
+        }else{
+            $asignacion_corte = EstadoPedido::where('asignacion_corte','si')->count();
+            if(!$asignacion_corte)
+                $estado_pedido->asignacion_corte = 'si';
+        }
+
+
         if($request->has('notificacion_push')){
             $estado_pedido->notificacion_push = 'si';
         }
@@ -88,7 +100,7 @@ class EstadoPedidoController extends Controller
             $estado_pedido->plantilla_correo_id = $request->input('plantilla_correo');
         }
         $estado_pedido->save();
-
+        session()->push('msj_success','El estado de pedido ha sido registrado con éxito.');
         return ['success'=>true];
     }
 

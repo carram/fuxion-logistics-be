@@ -54,7 +54,7 @@
 
 @section('js')
     @parent
-    <script src="{{asset('js/malla_Cobertura/index.js')}}"></script>
+    <script src="{{asset('js/malla_cobertura/index.js')}}"></script>
     <script>
         var tiene_opciones = false;
 

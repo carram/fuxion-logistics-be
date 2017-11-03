@@ -19,9 +19,7 @@ function guardarEstadoPedido() {
 
     $.post(url,params)
         .done(function (data) {
-            $("#form-crear-estado-pedido")[0].reset();
-            abrirAlerta("alertas-nuevo-estado-pedido","success",['El estado de pedido ha sido registrado con éxito.'],null,'body');
-            cerrarBlockUiCargando();
+            window.location.reload();
         })
         .fail(function (jqXHR,state,error) {
             abrirAlerta("alertas-nuevo-estado-pedido","danger",JSON.parse(jqXHR.responseText),null,null);

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-10-2017 a las 17:48:54
+-- Tiempo de generación: 01-11-2017 a las 18:25:43
 -- Versión del servidor: 10.1.10-MariaDB
 -- Versión de PHP: 7.0.3
 
@@ -49,6 +49,13 @@ CREATE TABLE `bodegas` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `bodegas`
+--
+
+INSERT INTO `bodegas` (`id`, `nombre`, `prefijo_facturacion`, `alias`, `ubicacion_id`, `created_at`, `updated_at`) VALUES
+(1, 'Bogota Fuxion', 'Bog01', 'S0021 - BOGOTA', 1, '2017-10-24 23:19:20', '2017-10-24 23:19:20');
 
 -- --------------------------------------------------------
 
@@ -1183,6 +1190,34 @@ INSERT INTO `ciudades` (`id`, `nombre`, `departamento_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `correos`
+--
+
+CREATE TABLE `correos` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `tipo` enum('programado','prioritario') NOT NULL DEFAULT 'prioritario',
+  `fecha_programada` date DEFAULT NULL,
+  `estado` enum('pendiente','enviado','cancelado') NOT NULL DEFAULT 'pendiente',
+  `titulo` varchar(150) DEFAULT NULL,
+  `mensaje` text NOT NULL,
+  `boton` enum('si','no') NOT NULL DEFAULT 'no',
+  `texto_boton` varchar(20) DEFAULT NULL,
+  `url_boton` text,
+  `plantilla_correo_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `correos`
+--
+
+INSERT INTO `correos` (`id`, `tipo`, `fecha_programada`, `estado`, `titulo`, `mensaje`, `boton`, `texto_boton`, `url_boton`, `plantilla_correo_id`, `created_at`, `updated_at`) VALUES
+(1, 'prioritario', NULL, 'pendiente', 'Estimad@ MARTHA ELISA MELO AVILA', 'Fuxión le informa que su pedido con número de factura <strong>72316410</strong>ha cambiadao su estado a "pedido en cola".', 'no', NULL, NULL, 2, '2017-10-26 16:04:01', '2017-10-26 16:04:01');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cortes`
 --
 
@@ -1190,10 +1225,18 @@ CREATE TABLE `cortes` (
   `id` int(10) UNSIGNED NOT NULL,
   `numero` int(10) UNSIGNED NOT NULL,
   `estado` enum('transmitido','enviado') NOT NULL DEFAULT 'transmitido',
+  `guias_asignadas` enum('si','no') NOT NULL DEFAULT 'no',
   `user_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `cortes`
+--
+
+INSERT INTO `cortes` (`id`, `numero`, `estado`, `guias_asignadas`, `user_id`, `created_at`, `updated_at`) VALUES
+(13, 1, 'transmitido', 'no', 11, '2017-11-01 22:57:06', '2017-11-01 22:57:06');
 
 -- --------------------------------------------------------
 
@@ -1265,6 +1308,61 @@ CREATE TABLE `empresarios` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `empresarios`
+--
+
+INSERT INTO `empresarios` (`id`, `tipo`, `kit`, `direccion`, `ciudad`, `departamento`, `empresario_id`, `enroler_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(99, 'FuXion Independent Entrepreneur', 'si', 'Carrera 30 # 46-32 Apto 101 Barrio La Grama - Vill', 'VILLAVICENCIO', 'MET', 224401, 63210, 110, '2017-10-24 23:36:24', '2017-10-24 23:36:24'),
+(100, 'FuXion Independent Entrepreneur', 'si', 'TRANSVERSAL 9B # 34- 246  URBANIZACION EL BOSQUE MAMATOCO|URBANIZACION EL BOSQUE MAMATOCO', 'SANTA MARTA', 'MAG', 849557, 817615, 111, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(101, 'FuXion Independent Entrepreneur', 'no', 'calle 22b No 63 24', 'BOGOTA', 'CUN', 615502, 605930, 112, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(102, 'FuXion Independent Entrepreneur', 'no', 'cra 7A N 17-84 APTO 401 BARRIO SIRATA', 'DUITAMA', 'BOY', 339377, 324693, 113, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(103, 'FuXion Independent Entrepreneur', 'si', 'CL 14A # 69 141', 'CALI', 'VAC', 849692, 842504, 114, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(104, 'FuXion Independent Entrepreneur', 'si', 'CRA 3 NÂº 45 - 36 EDIFICIO PORTO CASTELLO APTO 709 BARRIO: EL CABRERO', 'CARTAGENA', 'BOL', 849707, 848654, 115, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(105, 'FuXion Independent Entrepreneur', 'si', 'Barrio Mirador de la Bahia  Manzana O  Bloque 11', 'CARTAGENA', 'BOL', 756401, 512869, 116, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(106, 'Preferred Customer', 'no', 'Calle 34 # 44 - 55 Barrio Alicanto', 'PALMIRA', 'VAC', 837365, 788525, 117, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(107, 'FuXion Independent Entrepreneur', 'no', 'CARRERA 6 # 13C-30 CAÃ‘AHUATE', 'VALLEDUPAR', 'CES', 827144, 720091, 118, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(108, 'FuXion Independent Entrepreneur', 'no', 'Urbanizacion Terraza Calicanto Sector 1 Torre 4 Apto 605', 'CARTAGENA', 'BOL', 841281, 841238, 119, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(109, 'FuXion Independent Entrepreneur', 'no', 'colores de la villa bloque habano casa 8', 'PEREIRA', 'RIS', 308563, 308553, 120, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(110, 'FuXion Independent Entrepreneur', 'no', 'Carrera 55#91-45 casa ', 'BARRANQUILLA', 'ATL', 613739, 611944, 121, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(111, 'FuXion Independent Entrepreneur', 'no', 'CARRERA 7A NO 29-104 - TAMINAKA', 'SANTA MARTA', 'MAG', 206388, 204301, 122, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(112, 'FuXion Independent Entrepreneur', 'no', 'CALLE 5 No. 7 - 29', 'RIOHACHA', 'LAG', 619479, 615065, 123, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(113, 'FuXion Independent Entrepreneur', 'si', 'Kilometro 17 via las palmas|mall indiana local 156 ', 'ENVIGADO', 'ANT', 849758, 847500, 124, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(114, 'FuXion Independent Entrepreneur', 'no', 'transversal9b#34-246 urbanizacion el bosque mamatoco', 'SANTA MARTA', 'MAG', 817615, 206388, 125, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(115, 'FuXion Independent Entrepreneur', 'no', 'calle 14c NÂ° 19-39 | barrio las flores', 'VALLEDUPAR', 'CES', 445765, 431973, 126, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(116, 'FuXion Independent Entrepreneur', 'si', 'CALLE 40 # 1A- 45', 'TUNJA', 'BOY', 849453, 25446, 127, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(117, 'FuXion Independent Entrepreneur', 'no', 'Calle 11A # 45-25 Villa JardÃ­n Bloque 1 Apto 302', 'MANIZALES', 'CAL', 423590, 423526, 128, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(118, 'FuXion Independent Entrepreneur', 'no', 'Carrera 13 #106-30 Apto305 Interior2 Ed.Tenerife', 'BOGOTA', 'CUN', 28244, 26475, 129, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(119, 'FuXion Independent Entrepreneur', 'no', 'Carrera 13#106-30 apt 305 Int.2', 'BOGOTA', 'CUN', 129339, 28244, 130, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(120, 'FuXion Independent Entrepreneur', 'si', 'Carrera 13 A # 7B - 39 San Carlos', 'VALLEDUPAR', 'CES', 775421, 770070, 131, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(121, 'FuXion Independent Entrepreneur', 'si', 'Calle 30 #5-88 - Manzanares', 'SANTA MARTA', 'MAG', 808758, 206388, 132, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(122, 'FuXion Independent Entrepreneur', 'no', 'Calle 100 Cra 7 # 100-42 Barrio el portal. ', 'MONTERIA', 'COR', 700432, 687500, 133, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(123, 'FuXion Independent Entrepreneur', 'si', 'Carrera 4, 73-80 apartamento 302 edificio Saint George|Barrio de Rosales', 'BOGOTA', 'CUN', 849315, 835099, 134, '2017-10-24 23:32:01', '2017-10-24 23:32:01'),
+(124, 'FuXion Independent Entrepreneur', 'no', 'AV KRA 72 # 24B-34 TORRE 2 APTO 901 | Gran Reserva de Navarra', 'BOGOTA', 'CUN', 420026, 112188, 135, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(125, 'FuXion Independent Entrepreneur', 'si', 'Cll 12 #58-13 apto 201 torre C prados de la castellana ', 'MONTERIA', 'COR', 784303, 777306, 136, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(126, 'FuXion Independent Entrepreneur', 'no', 'CALLE 17 #31-81  CASA 16  LA ARBOLEDA', 'PEREIRA', 'RIS', 373797, 301709, 137, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(127, 'FuXion Independent Entrepreneur', 'no', 'CARRERA 6 # 13C - 30 BARRIO CAÃ‘AHUATE', 'VALLEDUPAR', 'CES', 821160, 798732, 138, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(128, 'FuXion Independent Entrepreneur', 'no', 'canarias manzana4 casa57 etapa1', 'SANTA MARTA', 'MAG', 832112, 752268, 139, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(129, 'FuXion Independent Entrepreneur', 'si', 'Calle 8 # 11 - 01 Conjunto Quintas de Celta, I Etapa - Casa 103 ', 'FUNZA', 'CUN', 784401, 774931, 140, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(130, 'Preferred Customer', 'no', 'Cra 31 N. 27-18|Calle peatonal', 'URRAO', 'ANT', 842843, 803094, 141, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(131, 'FuXion Independent Entrepreneur', 'no', 'CALLE 5 G # 38 - 06|CASA BLANCA', 'VALLEDUPAR', 'CES', 841326, 821160, 142, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(132, 'FuXion Independent Entrepreneur', 'si', 'CALLE 18 B SUR # 38 54 APTO 12 04  Unidad portÃ³n del campestre', 'MEDELLIN', 'ANT', 796435, 112188, 143, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(133, 'FuXion Independent Entrepreneur', 'no', 'calle 32 #  12-23 las americas', 'SANTA MARTA', 'MAG', 670689, 659041, 144, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(134, 'FuXion Independent Entrepreneur', 'no', 'carrera 6 numero 9-49 conjunto residencial iberica bloque 2 apartamento 101', 'ARMENIA', 'QUI', 700954, 675996, 145, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(135, 'FuXion Independent Entrepreneur', 'no', 'TRANSVERSAL 9B # 34-246|URBANIZACION EL BOSQUE MAMATOCO', 'SANTA MARTA', 'MAG', 849481, 817615, 146, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(136, 'FuXion Independent Entrepreneur', 'no', 'Carrera 86c #53c - 41 apt 903', 'MEDELLIN', 'ANT', 640694, 565830, 147, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(137, 'Preferred Customer', 'no', 'Calle 29 N 6-26 Hotel Casa Real ', 'MONTERIA', 'COR', 846912, 826645, 148, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(138, 'FuXion Independent Entrepreneur', 'no', 'Calle 64 #22-56 Barrio El Parnaso', 'BARRANCABERMEJA', 'SAN', 181119, 164219, 149, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(139, 'FuXion Independent Entrepreneur', 'no', 'calle 6 #2-11 barrio la coquera', 'MONTERIA', 'COR', 688021, 687500, 150, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(140, 'FuXion Independent Entrepreneur', 'no', 'CR 15 #31-50 AP 902 CONJUNTO PLAZA CENTRAL', 'BOGOTA', 'CUN', 813589, 672574, 151, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(141, 'FuXion Independent Entrepreneur', 'no', 'TRANSVERSAL 77 # 162-08 T 2 APT 501', 'BOGOTA', 'CUN', 480658, 129207, 152, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(142, 'FuXion Independent Entrepreneur', 'no', 'cr43 No 95A 148 casa 18', 'BARRANQUILLA', 'ATL', 832227, 57430, 153, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(143, 'FuXion Independent Entrepreneur', 'no', 'Manzana I Casa 15 Barrio Villa Maria|Casa de rejas blancas', 'GUAMAL', 'MET', 848720, 846643, 154, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(144, 'FuXion Independent Entrepreneur', 'si', 'CARRERA 13 A No 7B -39 SAN CARLOS ', 'VALLEDUPAR', 'CES', 772748, 768121, 155, '2017-10-24 23:36:25', '2017-10-24 23:36:25'),
+(145, 'FuXion Independent Entrepreneur', 'no', 'CALLE 46 #64-48 EL CISNE|CONJUNTO PARQUES DE BOLIVAR II ETAPA, TORRE 20 APARTAMENTO 103', 'SANTA MARTA', 'MAG', 840270, 832112, 156, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(146, 'FuXion Independent Entrepreneur', 'no', 'carrera 7 no 40-59 yopal', 'YOPAL', 'CAS', 831121, 196115, 157, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(147, 'FuXion Independent Entrepreneur', 'no', 'cra 81 # 31 - 64 Urbanizacion los alamos, Barrio el Recreo, Sector  El Eden', 'CARTAGENA', 'BOL', 841238, 543439, 158, '2017-10-24 23:22:35', '2017-10-24 23:22:35');
+
 -- --------------------------------------------------------
 
 --
@@ -1296,10 +1394,20 @@ CREATE TABLE `estados_pedidos` (
   `descripcion` varchar(250) DEFAULT NULL,
   `notificacion_push` enum('si','no') NOT NULL DEFAULT 'no',
   `notificacion_correo` enum('si','no') NOT NULL DEFAULT 'no',
+  `no_asignacion_corte` enum('si','no') NOT NULL DEFAULT 'no',
+  `asignacion_corte` enum('si','no') NOT NULL DEFAULT 'no',
   `plantilla_correo_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `estados_pedidos`
+--
+
+INSERT INTO `estados_pedidos` (`id`, `nombre`, `descripcion`, `notificacion_push`, `notificacion_correo`, `no_asignacion_corte`, `asignacion_corte`, `plantilla_correo_id`, `created_at`, `updated_at`) VALUES
+(8, 'Pendiente', 'Pedido pendiente por kit o flete', 'si', 'si', 'si', 'no', 1, '2017-10-24 20:15:34', '2017-10-24 20:15:34'),
+(9, 'En cola', 'Pedido en cola con corte', 'si', 'no', 'no', 'si', NULL, '2017-10-24 20:16:06', '2017-10-24 20:16:06');
 
 -- --------------------------------------------------------
 
@@ -1329,6 +1437,36 @@ INSERT INTO `funciones` (`id`, `nombre`, `identificador`, `created_at`, `updated
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `guias`
+--
+
+CREATE TABLE `guias` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `numero` text,
+  `estado` enum('registrada','enviada','entregada') NOT NULL DEFAULT 'registrada',
+  `foto_1` int(10) UNSIGNED DEFAULT NULL,
+  `foto_2` int(10) UNSIGNED DEFAULT NULL,
+  `malla_cobertura_id` int(10) UNSIGNED NOT NULL,
+  `operador_logistico_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `guias_pedidos`
+--
+
+CREATE TABLE `guias_pedidos` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `guia_id` int(10) UNSIGNED NOT NULL,
+  `pedido_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `historial_estados_pedidos`
 --
 
@@ -1336,9 +1474,70 @@ CREATE TABLE `historial_estados_pedidos` (
   `id` int(10) UNSIGNED NOT NULL,
   `pedido_id` int(10) UNSIGNED NOT NULL,
   `estado_pedido_id` int(10) UNSIGNED NOT NULL,
+  `razon_estado` enum('Pendiente por productos','Pendiente por devolucion','Pendiente por kit','Pendiente por flete') DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `historial_estados_pedidos`
+--
+
+INSERT INTO `historial_estados_pedidos` (`id`, `pedido_id`, `estado_pedido_id`, `razon_estado`, `created_at`, `updated_at`) VALUES
+(55, 595, 9, NULL, '2017-11-01 22:57:10', NULL),
+(56, 596, 8, 'Pendiente por flete', '2017-11-01 22:57:10', NULL),
+(57, 597, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(58, 598, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(59, 599, 8, 'Pendiente por flete', '2017-11-01 22:57:11', NULL),
+(60, 600, 9, NULL, '2017-11-01 22:57:11', NULL),
+(61, 601, 8, 'Pendiente por flete', '2017-11-01 22:57:11', NULL),
+(62, 602, 9, NULL, '2017-11-01 22:57:11', NULL),
+(63, 603, 9, NULL, '2017-11-01 22:57:11', NULL),
+(64, 604, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(65, 605, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(66, 606, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(67, 607, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(68, 608, 9, NULL, '2017-11-01 22:57:11', NULL),
+(69, 609, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(70, 610, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(71, 611, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(72, 612, 8, 'Pendiente por flete', '2017-11-01 22:57:11', NULL),
+(73, 613, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(74, 614, 9, NULL, '2017-11-01 22:57:11', NULL),
+(75, 615, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(76, 616, 8, 'Pendiente por flete', '2017-11-01 22:57:11', NULL),
+(77, 617, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(78, 618, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(79, 619, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(80, 620, 9, NULL, '2017-11-01 22:57:11', NULL),
+(81, 621, 9, NULL, '2017-11-01 22:57:11', NULL),
+(82, 622, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(83, 623, 9, NULL, '2017-11-01 22:57:11', NULL),
+(84, 624, 9, NULL, '2017-11-01 22:57:11', NULL),
+(85, 625, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(86, 626, 9, NULL, '2017-11-01 22:57:11', NULL),
+(87, 627, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(88, 628, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(89, 629, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(90, 630, 9, NULL, '2017-11-01 22:57:11', NULL),
+(91, 631, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(92, 632, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(93, 633, 9, NULL, '2017-11-01 22:57:11', NULL),
+(94, 634, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(95, 635, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(96, 636, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(97, 637, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(98, 638, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(99, 639, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(100, 640, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(101, 641, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(102, 642, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(103, 643, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(104, 644, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(105, 645, 9, NULL, '2017-11-01 22:57:11', NULL),
+(106, 646, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(107, 647, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL),
+(108, 648, 8, 'Pendiente por kit', '2017-11-01 22:57:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -1355,6 +1554,14 @@ CREATE TABLE `kit_empresarios` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `kit_empresarios`
+--
+
+INSERT INTO `kit_empresarios` (`id`, `inicio`, `fin`, `excepciones`, `created_at`, `updated_at`) VALUES
+(1, 224401, 224401, NULL, '2017-10-24 23:36:00', '2017-10-24 23:36:00'),
+(2, 756401, 808758, '808000_808055', '2017-10-24 23:36:00', '2017-10-24 23:36:00');
+
 -- --------------------------------------------------------
 
 --
@@ -1370,6 +1577,22 @@ CREATE TABLE `mallas_cobertura` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `mallas_cobertura`
+--
+
+INSERT INTO `mallas_cobertura` (`id`, `origen`, `destino`, `tiempo_entrega`, `operador_logistico_id`, `created_at`, `updated_at`) VALUES
+(1, 'BOGOTA', 'MEDELLIN', 3, 1, '2017-10-25 18:56:15', '2017-10-25 18:56:15'),
+(2, 'BOGOTA', 'VILLAVICENCIO', 4, 1, '2017-10-25 18:56:48', '2017-10-25 18:56:48'),
+(3, 'BOGOTA', 'CALI', 3, 1, '2017-10-25 19:00:32', '2017-10-25 19:00:32'),
+(4, 'BOGOTA', 'CARTAGENA', 4, 1, '2017-10-25 19:00:56', '2017-10-25 19:00:56'),
+(5, 'BOGOTA', 'SANTA MARTA', 4, 1, '2017-10-25 19:01:35', '2017-10-25 19:01:35'),
+(7, 'BOGOTA', 'ENVIGADO', 2, 1, '2017-10-25 19:04:10', '2017-10-25 19:04:10'),
+(8, 'BOGOTA', 'VALLEDUPAR', 3, 1, '2017-10-25 19:23:10', '2017-10-25 19:23:10'),
+(9, 'BOGOTA', 'BOGOTA', 1, 1, '2017-10-25 19:23:24', '2017-10-25 19:23:24'),
+(10, 'BOGOTA', 'MONTERIA', 3, 1, '2017-10-25 19:23:38', '2017-10-25 19:23:38'),
+(11, 'BOGOTA', 'FUNZA', 3, 1, '2017-10-25 19:23:51', '2017-10-25 19:23:51');
 
 -- --------------------------------------------------------
 
@@ -1491,7 +1714,8 @@ INSERT INTO `modulos_funciones` (`id`, `modulo_id`, `funcion_id`) VALUES
 (45, 11, 3),
 (46, 11, 4),
 (47, 11, 5),
-(48, 11, 6);
+(48, 11, 6),
+(49, 4, 4);
 
 -- --------------------------------------------------------
 
@@ -1644,6 +1868,15 @@ CREATE TABLE `operadores_logisticos` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `operadores_logisticos`
+--
+
+INSERT INTO `operadores_logisticos` (`id`, `nombre`, `prefijo`, `contacto`, `ws`, `ubicacion_id`, `created_at`, `updated_at`) VALUES
+(1, 'Deprisa', 'DP', 'deprisa@deprisa.com', 'si', 2, '2017-10-25 18:56:08', '2017-10-25 18:56:08'),
+(2, 'Servientrega', 'Sv', 'servientrega@servientrega.co', 'si', 3, '2017-10-25 21:07:48', '2017-10-25 21:07:48'),
+(3, 'Domina', 'Dm', 'domina@domina.co', 'no', 4, '2017-10-25 21:08:32', '2017-10-25 21:08:32');
+
 -- --------------------------------------------------------
 
 --
@@ -1690,7 +1923,6 @@ INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
 
 CREATE TABLE `pedidos` (
   `id` int(10) UNSIGNED NOT NULL,
-  `estado` enum('pendiente','en cola') NOT NULL DEFAULT 'pendiente',
   `fecha_orden` timestamp NULL DEFAULT NULL,
   `fecha_impresion` timestamp NULL DEFAULT NULL,
   `serie` int(11) DEFAULT NULL,
@@ -1701,15 +1933,75 @@ CREATE TABLE `pedidos` (
   `total_tax` double DEFAULT NULL,
   `costo_envio` double DEFAULT NULL,
   `total` double DEFAULT NULL,
+  `descuento` double DEFAULT '0',
   `tipo_pago` varchar(150) DEFAULT NULL,
   `volumen_comisionable` double DEFAULT NULL,
   `empresario_id` int(10) UNSIGNED NOT NULL,
   `corte_id` int(10) UNSIGNED DEFAULT NULL,
   `bodega_id` int(10) UNSIGNED NOT NULL,
-  `operador_logistico_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`id`, `fecha_orden`, `fecha_impresion`, `serie`, `correlativo`, `orden_id`, `impreso_por`, `subtotal`, `total_tax`, `costo_envio`, `total`, `descuento`, `tipo_pago`, `volumen_comisionable`, `empresario_id`, `corte_id`, `bodega_id`, `created_at`, `updated_at`) VALUES
+(595, '2017-04-10 12:05:30', '2017-04-10 12:13:25', 723, 16410, 4858931, 'admin', 301386.54, 57263.44, 15000, 373649.98, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 80, 99, 13, 1, '2017-11-01 22:57:06', '2017-11-01 22:57:06'),
+(596, '2017-04-10 14:12:06', '2017-04-10 15:43:25', 723, 16411, 4859038, 'admin', 41428.57, 7871.43, 0, 49300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 100, NULL, 1, '2017-11-01 22:57:06', '2017-11-01 22:57:10'),
+(597, '2017-04-10 17:03:55', '2017-04-10 17:10:09', 723, 16412, 4859638, 'co_porozco', 226039.9, 42947.58, 8000, 276987.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 101, NULL, 1, '2017-11-01 22:57:06', '2017-11-01 22:57:11'),
+(598, '2017-04-10 13:18:19', '2017-04-10 17:43:25', 723, 16413, 4858976, 'admin', 80369.74, 15270.25, 15000, 110639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 102, NULL, 1, '2017-11-01 22:57:06', '2017-11-01 22:57:11'),
+(599, '2017-04-10 18:25:14', '2017-04-10 18:43:25', 723, 16414, 4859991, 'admin', 41428.57, 7871.43, 0, 49300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 103, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(600, '2017-04-10 18:48:25', '2017-04-10 18:58:28', 723, 16415, 4860079, 'admin', 249989.49, 47498, 12000, 309487.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 66, 103, 13, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:07'),
+(601, '2017-04-10 18:56:11', '2017-04-10 19:10:55', 723, 16416, 4860103, 'co_porozco', 41428.57, 7871.43, 0, 49300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 104, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(602, '2017-04-10 19:06:11', '2017-04-10 19:13:31', 723, 16417, 4860132, 'admin', 226039.9, 42947.58, 12000, 280987.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 105, 13, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:07'),
+(603, '2017-04-10 19:06:30', '2017-04-10 19:13:34', 723, 16418, 4860133, 'admin', 226039.9, 42947.58, 12000, 280987.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 104, 13, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:07'),
+(604, '2017-04-10 05:00:00', '2017-04-10 19:43:26', 723, 16419, 4859269, 'admin', 131638.65, 25011.34, 25000, 181649.99, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 26, 106, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(605, '2017-03-10 20:26:32', '2017-04-10 19:58:26', 723, 16420, 4857654, 'admin', 256355.04, 48707.46, 15000, 320062.5, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 64, 107, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(606, '2017-04-10 14:03:32', '2017-04-10 19:58:28', 723, 16421, 4859016, 'admin', 80369.74, 15270.25, 12000, 107639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 108, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(607, '2017-04-10 12:15:51', '2017-04-10 20:13:27', 723, 16422, 4858935, 'admin', 138117.65, 26242.35, 12000, 176360, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 34, 109, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(608, '2017-04-10 20:01:41', '2017-04-10 20:13:34', 723, 16423, 4860363, 'admin', 705829.82, 134107.66, 15000, 854937.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 113, 100, 13, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:07'),
+(609, '2017-04-10 20:05:35', '2017-04-10 20:13:37', 723, 16424, 4860386, 'admin', 233571.42, 44378.57, 8000, 285949.99, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 62, 110, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(610, '2017-04-10 18:55:48', '2017-04-10 20:43:26', 723, 16425, 4860100, 'admin', 263014.68, 49972.79, 15000, 327987.47, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 111, NULL, 1, '2017-11-01 22:57:07', '2017-11-01 22:57:11'),
+(611, '2017-04-10 19:29:10', '2017-04-10 20:43:28', 723, 16426, 4860217, 'admin', 226039.9, 42947.58, 25000, 293987.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 112, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(612, '2017-04-10 20:25:28', '2017-04-10 20:43:32', 723, 16427, 4860470, 'admin', 41428.57, 7871.43, 0, 49300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 113, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(613, '2017-04-10 20:48:20', '2017-04-10 20:58:36', 723, 16428, 4860568, 'admin', 301386.54, 57263.44, 15000, 373649.98, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 80, 114, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(614, '2017-04-10 21:06:48', '2017-04-10 21:13:28', 723, 16429, 4860676, 'admin', 437762.58, 83174.89, 12000, 532937.47, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 105, 113, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(615, '2017-04-10 14:15:00', '2017-04-10 21:28:29', 723, 16430, 4859043, 'admin', 92470.58, 17569.41, 15000, 125039.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 22, 115, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(616, '2017-03-11 01:04:33', '2017-04-10 21:58:25', 723, 16431, 4858591, 'admin', 41428.57, 7871.43, 0, 49300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 116, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(617, '2017-04-10 18:36:04', '2017-04-10 21:58:28', 723, 16432, 4860030, 'admin', 197310.93, 37489.08, 15000, 249800.01, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 49, 117, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(618, '2017-04-10 21:41:05', '2017-04-10 21:58:30', 723, 16433, 4860893, 'admin', 80369.74, 15270.25, 8000, 103639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 118, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(619, '2017-04-10 21:46:53', '2017-04-10 21:58:33', 723, 16434, 4860933, 'admin', 80369.74, 15270.25, 8000, 103639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 119, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(620, '2017-04-10 22:09:09', '2017-04-10 22:13:37', 723, 16435, 4861073, 'admin', 257176.46, 48863.53, 15000, 321039.99, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 64, 120, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(621, '2017-04-10 22:36:59', '2017-04-10 22:58:30', 723, 16436, 4861251, 'admin', 80369.74, 15270.25, 15000, 110639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 121, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(622, '2017-03-11 01:27:06', '2017-04-10 23:43:26', 723, 16437, 4858647, 'admin', 283613.44, 53886.55, 12000, 349499.99, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 70, 122, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(623, '2017-04-10 23:27:32', '2017-04-10 23:43:28', 723, 16438, 4861569, 'admin', 41428.57, 7871.43, 8000, 57300, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 0, 123, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(624, '2017-04-10 23:45:13', '2017-04-10 23:58:35', 723, 16439, 4861682, 'admin', 245262.6, 46599.89, 8000, 299862.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 65, 123, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(625, '2017-04-10 23:48:36', '2017-04-10 23:58:40', 723, 16440, 4861702, 'admin', 260042.01, 49407.98, 8000, 317449.99, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 68, 124, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(626, '2017-04-10 23:27:20', '2017-04-11 00:13:29', 723, 16441, 4861565, 'admin', 80369.74, 15270.25, 12000, 107639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 125, 13, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:08'),
+(627, '2017-04-11 00:11:13', '2017-04-11 00:28:29', 723, 16442, 4861857, 'admin', 197008.4, 37431.6, 12000, 246440, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 48, 126, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(628, '2017-04-10 21:04:41', '2017-04-11 00:58:26', 723, 16443, 4860660, 'admin', 269590.33, 51222.16, 15000, 335812.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 70, 127, NULL, 1, '2017-11-01 22:57:08', '2017-11-01 22:57:11'),
+(629, '2017-04-11 00:34:26', '2017-04-11 00:58:31', 723, 16444, 4862019, 'admin', 318970.58, 60604.41, 15000, 394574.99, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 84, 128, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(630, '2017-04-11 00:47:19', '2017-04-11 00:58:41', 723, 16446, 4862108, 'admin', 234296.22, 44516.28, 15000, 293812.5, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 62, 129, 13, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:09'),
+(631, '2017-04-10 16:50:00', '2017-04-11 00:58:36', 723, 16445, 4862061, 'admin', 234537.8, 44562.18, 25000, 304099.98, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 42, 130, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(632, '2017-04-10 21:06:05', '2017-04-11 01:13:27', 723, 16447, 4860669, 'admin', 277027.3, 52635.19, 15000, 344662.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 65, 131, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(633, '2017-04-11 00:58:07', '2017-04-11 01:13:32', 723, 16448, 4862213, 'admin', 80369.74, 15270.25, 12000, 107639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 132, 13, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:09'),
+(634, '2017-04-11 01:16:17', '2017-04-11 01:28:31', 723, 16449, 4862342, 'admin', 271102.93, 51509.56, 15000, 337612.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 66, 133, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(635, '2017-04-11 01:28:21', '2017-04-11 01:43:26', 723, 16450, 4862419, 'admin', 80369.74, 15270.25, 15000, 110639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 134, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(636, '2017-04-11 00:19:05', '2017-04-11 01:58:26', 723, 16451, 4861921, 'admin', 265115.54, 50371.95, 15000, 330487.49, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 70, 135, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(637, '2017-04-11 01:41:52', '2017-04-11 01:58:30', 723, 16452, 4862505, 'admin', 291869.74, 55455.25, 12000, 359324.99, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 77, 136, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(638, '2017-04-10 16:50:00', '2017-04-11 01:58:33', 723, 16453, 4862527, 'admin', 114327.72, 21722.27, 12000, 148049.99, 0, 'Pago En Linea CrÃ©dito/DÃ©bito', 16, 137, NULL, 1, '2017-11-01 22:57:09', '2017-11-01 22:57:11'),
+(639, '2017-04-11 01:51:21', '2017-04-11 01:58:36', 723, 16454, 4862555, 'admin', 301386.54, 57263.44, 25000, 383649.98, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 80, 138, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(640, '2017-04-11 01:35:26', '2017-04-11 02:13:26', 723, 16455, 4862451, 'admin', 80369.74, 15270.25, 12000, 107639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 139, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(641, '2017-04-11 02:28:18', '2017-04-11 02:43:26', 723, 16456, 4862735, 'admin', 80369.74, 15270.25, 8000, 103639.99, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 20, 140, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(642, '2017-04-11 02:33:35', '2017-04-11 02:43:28', 723, 16457, 4862749, 'admin', 38420.17, 7299.83, 8000, 53720, 20, 'Pago En Linea CrÃ©dito/DÃ©bito', 8, 141, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(643, '2017-04-11 03:39:50', '2017-04-11 03:58:32', 723, 16458, 4863007, 'admin', 262058.81, 49791.17, 8000, 319849.98, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 68, 142, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(644, '2017-04-11 03:42:26', '2017-04-11 03:58:36', 723, 16459, 4863022, 'admin', 747331.9, 141993.06, 25000, 914324.96, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 186, 143, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(645, '2017-04-11 04:31:18', '2017-04-11 04:43:26', 723, 16460, 4863177, 'admin', 249201.68, 47348.32, 15000, 311550, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 62, 144, 13, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:10'),
+(646, '2017-04-11 02:48:46', '2017-05-10 06:43:27', 723, 16461, 4862809, 'admin', 262058.81, 49791.17, 15000, 326849.98, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 68, 145, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(647, '2017-04-11 02:22:38', '2017-05-10 13:21:28', 723, 16462, 4862715, 'co_porozco', 255661.75, 48575.73, 25000, 329237.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 64, 146, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11'),
+(648, '2017-04-10 14:11:16', '2017-05-10 13:58:28', 723, 16463, 4859035, 'admin', 226039.9, 42947.58, 12000, 280987.48, 25, 'Pago En Linea CrÃ©dito/DÃ©bito', 60, 147, NULL, 1, '2017-11-01 22:57:10', '2017-11-01 22:57:11');
 
 -- --------------------------------------------------------
 
@@ -1721,11 +2013,209 @@ CREATE TABLE `pedidos_productos` (
   `id` int(10) UNSIGNED NOT NULL,
   `cantidad` double DEFAULT NULL,
   `precio_unitario` double DEFAULT NULL,
-  `descuento` double DEFAULT NULL,
   `total` double DEFAULT NULL,
   `pedido_id` int(10) UNSIGNED NOT NULL,
   `producto_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `pedidos_productos`
+--
+
+INSERT INTO `pedidos_productos` (`id`, `cantidad`, `precio_unitario`, `total`, `pedido_id`, `producto_id`) VALUES
+(194, 4, 100462.18, 401848.72, 595, 929),
+(195, -1, 100462.18, -100462.18, 595, 930),
+(196, 1, 41428.57, 41428.57, 596, 931),
+(197, 2, 100462.18, 200924.36, 597, 929),
+(198, 1, 100462.18, 100462.18, 597, 932),
+(199, -1, 75346.635, -75346.635, 597, 930),
+(200, 1, 100462.18, 100462.18, 598, 929),
+(201, -1, 20092.436, -20092.436, 598, 930),
+(202, 1, 41428.57, 41428.57, 599, 931),
+(203, 1, 100462.18, 100462.18, 600, 929),
+(204, 1, 100462.18, 100462.18, 600, 933),
+(205, 1, 80294.12, 80294.12, 600, 934),
+(206, 1, 52100.84, 52100.84, 600, 935),
+(207, -1, 83329.83, -83329.83, 600, 930),
+(208, 1, 41428.57, 41428.57, 601, 931),
+(209, 1, 100462.18, 100462.18, 602, 936),
+(210, 1, 100462.18, 100462.18, 602, 937),
+(211, 1, 100462.18, 100462.18, 602, 938),
+(212, -1, 75346.635, -75346.635, 602, 930),
+(213, 1, 100462.18, 100462.18, 603, 929),
+(214, 1, 100462.18, 100462.18, 603, 933),
+(215, 1, 100462.18, 100462.18, 603, 937),
+(216, -1, 75346.635, -75346.635, 603, 930),
+(217, 1, 131638.65, 131638.65, 604, 939),
+(218, 1, 126092.44, 126092.44, 605, 940),
+(219, 1, 115588.23, 115588.23, 605, 941),
+(220, 1, 48025.21, 48025.21, 605, 942),
+(221, 1, 52100.84, 52100.84, 605, 943),
+(222, -1, 85451.68, -85451.68, 605, 930),
+(223, 1, 100462.18, 100462.18, 606, 929),
+(224, -1, 20092.436, -20092.436, 606, 930),
+(225, 1, 52100.84, 52100.84, 607, 943),
+(226, 1, 120546.22, 120546.22, 607, 944),
+(227, -1, 34529.412, -34529.412, 607, 930),
+(228, 1, 80294.12, 80294.12, 608, 934),
+(229, 1, 135756.3, 135756.3, 608, 945),
+(230, 1, 100462.18, 100462.18, 608, 933),
+(231, 1, 85840.34, 85840.34, 608, 946),
+(232, 1, 48025.21, 48025.21, 608, 942),
+(233, 1, 24789.92, 24789.92, 608, 947),
+(234, 2, 100462.18, 200924.36, 608, 937),
+(235, 1, 18487.39, 18487.39, 608, 948),
+(236, 1, 131638.65, 131638.65, 608, 939),
+(237, 1, 100462.18, 100462.18, 608, 936),
+(238, 1, 0, 0, 608, 949),
+(239, -1, 220850.835, -220850.835, 608, 930),
+(240, 1, 110504.2, 110504.2, 609, 950),
+(241, 1, 100462.18, 100462.18, 609, 929),
+(242, 1, 100462.18, 100462.18, 609, 951),
+(243, -1, 77857.14, -77857.14, 609, 930),
+(244, 2, 100462.18, 200924.36, 610, 937),
+(245, 1, 100462.18, 100462.18, 610, 929),
+(246, 2, 18487.39, 36974.78, 610, 948),
+(247, -1, 75346.635, -75346.635, 610, 930),
+(248, 3, 100462.18, 301386.54, 611, 937),
+(249, -1, 75346.635, -75346.635, 611, 930),
+(250, 1, 41428.57, 41428.57, 612, 931),
+(251, 2, 100462.18, 200924.36, 613, 936),
+(252, 2, 100462.18, 200924.36, 613, 937),
+(253, -1, 100462.18, -100462.18, 613, 930),
+(254, 1, 115588.23, 115588.23, 614, 941),
+(255, 1, 110504.2, 110504.2, 614, 952),
+(256, 1, 100462.18, 100462.18, 614, 953),
+(257, 1, 100462.18, 100462.18, 614, 937),
+(258, 1, 110504.2, 110504.2, 614, 950),
+(259, 1, 17310.92, 17310.92, 614, 954),
+(260, 1, 17310.92, 17310.92, 614, 955),
+(261, -1, 134380.2475, -134380.2475, 614, 930),
+(262, 1, 115588.23, 115588.23, 615, 956),
+(263, -1, 23117.646, -23117.646, 615, 930),
+(264, 1, 41428.57, 41428.57, 616, 931),
+(265, 1, 126092.44, 126092.44, 617, 940),
+(266, 1, 120546.22, 120546.22, 617, 944),
+(267, -1, 49327.732, -49327.732, 617, 930),
+(268, 1, 100462.18, 100462.18, 618, 936),
+(269, -1, 20092.436, -20092.436, 618, 930),
+(270, 1, 100462.18, 100462.18, 619, 936),
+(271, -1, 20092.436, -20092.436, 619, 930),
+(272, 1, 120546.22, 120546.22, 620, 944),
+(273, 1, 100462.18, 100462.18, 620, 933),
+(274, 1, 100462.18, 100462.18, 620, 936),
+(275, 1, -64294.116, -64294.116, 620, 957),
+(276, 1, 100462.18, 100462.18, 621, 933),
+(277, -1, 20092.436, -20092.436, 621, 930),
+(278, 1, 378151.26, 378151.26, 622, 958),
+(279, -1, 94537.815, -94537.815, 622, 930),
+(280, 1, 41428.57, 41428.57, 623, 931),
+(281, 1, 126092.44, 126092.44, 624, 940),
+(282, 1, 100462.18, 100462.18, 624, 937),
+(283, 1, 100462.18, 100462.18, 624, 933),
+(284, -1, 81754.2, -81754.2, 624, 930),
+(285, 1, 135756.3, 135756.3, 625, 959),
+(286, 1, 110504.2, 110504.2, 625, 950),
+(287, 1, 100462.18, 100462.18, 625, 929),
+(288, -1, 86680.67, -86680.67, 625, 930),
+(289, 1, 100462.18, 100462.18, 626, 929),
+(290, -1, 20092.436, -20092.436, 626, 930),
+(291, 1, 110504.2, 110504.2, 627, 960),
+(292, 1, 135756.3, 135756.3, 627, 945),
+(293, -1, 49252.1, -49252.1, 627, 930),
+(294, 1, 110504.2, 110504.2, 628, 960),
+(295, 1, 100462.18, 100462.18, 628, 937),
+(296, 1, 100462.18, 100462.18, 628, 936),
+(297, 1, 48025.21, 48025.21, 628, 942),
+(298, -1, 89863.4425, -89863.4425, 628, 930),
+(299, 1, 2521.01, 2521.01, 629, 961),
+(300, 2, 100462.18, 200924.36, 629, 933),
+(301, 1, 120546.22, 120546.22, 629, 944),
+(302, 1, 100462.18, 100462.18, 629, 937),
+(303, 1, 4369.75, 4369.75, 629, 962),
+(304, 1, 0, 0, 629, 963),
+(305, 1, 0, 0, 629, 963),
+(306, -1, 4369.75, -4369.75, 629, 964),
+(307, -1, 105483.19, -105483.19, 629, 930),
+(308, 1, 85840.34, 85840.34, 630, 946),
+(309, 1, 100462.18, 100462.18, 630, 929),
+(310, 1, 126092.44, 126092.44, 630, 940),
+(311, -1, 78098.74, -78098.74, 630, 930),
+(312, 1, 100462.18, 100462.18, 631, 937),
+(313, 1, 18487.39, 18487.39, 631, 948),
+(314, 1, 115588.23, 115588.23, 631, 956),
+(315, 1, 115588.23, 115588.23, 632, 941),
+(316, 3, 48025.21, 144075.63, 632, 942),
+(317, 1, 100462.18, 100462.18, 632, 937),
+(318, 1, 6932.77, 6932.77, 632, 965),
+(319, -1, 90031.51, -90031.51, 632, 930),
+(320, 1, 100462.18, 100462.18, 633, 929),
+(321, -1, 20092.436, -20092.436, 633, 930),
+(322, 1, 100462.18, 100462.18, 634, 932),
+(323, 1, 100462.18, 100462.18, 634, 951),
+(324, 1, 3193.28, 3193.28, 634, 966),
+(325, 1, 18487.39, 18487.39, 634, 948),
+(326, 1, 131638.65, 131638.65, 634, 939),
+(327, -1, 83140.7525, -83140.7525, 634, 930),
+(328, 1, 100462.18, 100462.18, 635, 929),
+(329, -1, 20092.436, -20092.436, 635, 930),
+(330, 1, 52100.84, 52100.84, 636, 943),
+(331, 1, 100462.18, 100462.18, 636, 933),
+(332, 1, 100462.18, 100462.18, 636, 951),
+(333, 1, 100462.18, 100462.18, 636, 929),
+(334, -1, 88371.845, -88371.845, 636, 930),
+(335, 1, 110504.2, 110504.2, 637, 960),
+(336, 1, 126092.44, 126092.44, 637, 967),
+(337, 1, 52100.84, 52100.84, 637, 935),
+(338, 1, 100462.18, 100462.18, 637, 953),
+(339, -1, 97289.915, -97289.915, 637, 930),
+(340, 1, 100462.18, 100462.18, 638, 929),
+(341, 2, 6932.77, 13865.54, 638, 965),
+(342, 1, 100462.18, 100462.18, 639, 929),
+(343, 1, 100462.18, 100462.18, 639, 937),
+(344, 1, 100462.18, 100462.18, 639, 953),
+(345, 1, 100462.18, 100462.18, 639, 938),
+(346, -1, 100462.18, -100462.18, 639, 930),
+(347, 1, 100462.18, 100462.18, 640, 937),
+(348, -1, 20092.436, -20092.436, 640, 930),
+(349, 1, 100462.18, 100462.18, 641, 929),
+(350, -1, 20092.436, -20092.436, 641, 930),
+(351, 1, 48025.21, 48025.21, 642, 942),
+(352, -1, 9605.042, -9605.042, 642, 930),
+(353, 1, 100462.18, 100462.18, 643, 937),
+(354, 1, 100462.18, 100462.18, 643, 953),
+(355, 1, 48025.21, 48025.21, 643, 942),
+(356, 1, 100462.18, 100462.18, 643, 936),
+(357, -1, 87352.9375, -87352.9375, 643, 930),
+(358, 1, 48025.21, 48025.21, 644, 942),
+(359, 2, 100462.18, 200924.36, 644, 937),
+(360, 1, 80294.12, 80294.12, 644, 934),
+(361, 1, 115588.23, 115588.23, 644, 956),
+(362, 1, 100462.18, 100462.18, 644, 953),
+(363, 2, 18487.39, 36974.78, 644, 948),
+(364, 1, 100462.18, 100462.18, 644, 933),
+(365, 1, 100462.18, 100462.18, 644, 951),
+(366, 2, 100462.18, 200924.36, 644, 929),
+(367, -1, 236785.705, -236785.705, 644, 930),
+(368, 1, 135756.3, 135756.3, 645, 959),
+(369, 2, 48025.21, 96050.42, 645, 942),
+(370, 1, 100462.18, 100462.18, 645, 929),
+(371, -1, 83067.225, -83067.225, 645, 930),
+(372, 1, 100462.18, 100462.18, 646, 929),
+(373, 1, 100462.18, 100462.18, 646, 953),
+(374, 1, 100462.18, 100462.18, 646, 933),
+(375, 1, 48025.21, 48025.21, 646, 942),
+(376, -1, 87352.9375, -87352.9375, 646, 930),
+(377, 1, 100462.18, 100462.18, 647, 937),
+(378, 1, 6932.77, 6932.77, 647, 965),
+(379, 2, 115588.23, 231176.46, 647, 956),
+(380, 1, 0, 0, 647, 963),
+(381, 1, 0, 0, 647, 963),
+(382, -1, 82909.66, -82909.66, 647, 930),
+(383, 1, 100462.18, 100462.18, 648, 932),
+(384, 1, 100462.18, 100462.18, 648, 953),
+(385, 1, 100462.18, 100462.18, 648, 937),
+(386, -1, 75346.635, -75346.635, 648, 930);
 
 -- --------------------------------------------------------
 
@@ -1737,10 +2227,17 @@ CREATE TABLE `plantillas_correos` (
   `id` int(10) UNSIGNED NOT NULL,
   `nombre` varchar(150) NOT NULL,
   `asunto` varchar(150) DEFAULT NULL,
-  `archivo` varchar(250) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `plantillas_correos`
+--
+
+INSERT INTO `plantillas_correos` (`id`, `nombre`, `asunto`, `created_at`, `updated_at`) VALUES
+(1, 'Pedido pendiente', 'Estado de pedido pendiente', '2017-10-24 19:57:35', '2017-10-24 19:57:35'),
+(2, 'Pedido en cola', 'Estado de pedido en cola', '2017-10-24 19:57:55', '2017-10-24 19:57:55');
 
 -- --------------------------------------------------------
 
@@ -1754,6 +2251,64 @@ CREATE TABLE `productos` (
   `descripcion` varchar(250) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `created_at`, `updated_at`) VALUES
+(929, '141995', 'VITA ENERGIA EXTRA T COLOMBIA', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(930, 'DSCT', 'Discount', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(931, '141925', 'KIT DE AFILIACION COLOMBIA', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(932, '141863', 'ACTIVAMENTE FUXION CO', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(933, '141907', 'ELIXIR HGH COLOMBIA', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(934, '141928', 'LIQUID FIBRA COLOMBIA', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(935, '141974', 'TE GANOMAS COLOMBIA', '2017-11-01 14:19:27', '2017-11-01 14:19:27'),
+(936, '141989', 'VITA ENERGIA CHICHA COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(937, '141980', 'TERMO TE COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(938, '141941', 'PASSION DRINK COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(939, '141986', 'VERAMAS COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(940, '141882', 'BIOPRO TEC (20x25GR) COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(941, '141889', 'BIOPRO+SPORT VAINILLA (15x25GR) COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(942, '141963', 'RGX 1 COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(943, '141899', 'CAFE CAPPUCCINO GANOMAS COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(944, '141913', 'FLORA LIV COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(945, '141870', 'BERRY BALANCE COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(946, '141935', 'ON COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(947, '142332', 'SISTEMA X DE NEGOCIO CO', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(948, '142662', 'TOMATODO NUEVA IMAGEN', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(949, 'SPL60', 'SPLITVOLUME60', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(950, '141951', 'PRE SPORT COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(951, '141919', 'FLX TE COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(952, '141945', 'POST SPORT COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(953, '141975', 'TE NOCARB COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(954, '142155', 'TOMATODO FUCSIA CON MEZCLADOR COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(955, '141160', 'TOMATODO CON MEZCLADOR COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(956, '141874', 'BIOPRO + FIT VAINILLA (20x25 GR)COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(957, 'DSCG', 'Discount', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(958, '141939', 'PACK 5/14 FUXION COLOMBIA', '2017-11-01 14:19:28', '2017-11-01 14:19:28'),
+(959, '141906', 'CAFÃ‰ & CAFE FIT FUXION X 28 COLOMBIA', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(960, '141932', 'OFF COLOMBIA', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(961, '142394', 'Catalogo de Productos unidad', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(962, '131143', 'CD VARIOS COLOMBIA', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(963, '142848', 'BIOPRO TEC (20x25GR) FUXION CO', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(964, 'DSCP', 'Descuento Promocional', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(965, '131058', 'TOMALIFE FUXION', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(966, '142393', 'Set Hojas presentacion Sistema X', '2017-11-01 14:19:29', '2017-11-01 14:19:29'),
+(967, '141957', 'PROBAL COLOMBIA', '2017-11-01 14:19:29', '2017-11-01 14:19:29');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_enviados`
+--
+
+CREATE TABLE `productos_enviados` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `cantidad` double DEFAULT '0',
+  `producto_id` int(10) UNSIGNED NOT NULL,
+  `guia_pedido_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1803,7 +2358,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('466nrtN1dvjeDRB3x6oE6cAJV7Lt8CY1A7y04Za9', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUXU1cVVHaUYzUXUzWTRhYUVUZ2NDYURUNFRyOFpOVXgyQnU0WXlKVSI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9kZXRhbGxlLzEiO31zOjIyOiJQSFBERUJVR0JBUl9TVEFDS19EQVRBIjthOjA6e31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1508798533);
+('2Zpg57vTIe9FeqBRqXyjZeMYCdPoGf6YkWIMlkNr', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUmwwb0s4dmx2eVlJWkU2QlpXdG1zSkliVDRyTVNTZmRScFpWQzExdyI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9ndWlhcy1tYW51YWxlcy8xMSI7fXM6MjI6IlBIUERFQlVHQkFSX1NUQUNLX0RBVEEiO2E6MDp7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1509485316),
+('PU4QrdrnOpjeXjuGJ3SMrnxL1VzyeRViCIjbptRr', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidjZkWThDS1J5T0J6WTVQU1FIZnVWa3h1YUl2c2RiV1RjY2J5YVMxYyI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9pbXBvcnRhciI7fXM6MjI6IlBIUERFQlVHQkFSX1NUQUNLX0RBVEEiO2E6MDp7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1509577032),
+('wy7rPiekA42vRwdeJncBmKHXhl62BFvCfSbWoDw1', 11, '192.168.0.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoib0U5U1lTbTFNSkRUejlURWFvVkNzYkVLaTRMV1UwdzdqMnJ1cUZPMSI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xOTIuMTY4LjAuMTg6ODAwMC9jb3J0ZS9ndWlhcy8xMiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MjI6IlBIUERFQlVHQkFSX1NUQUNLX0RBVEEiO2E6MDp7fX0=', 1509550982);
 
 -- --------------------------------------------------------
 
@@ -1820,6 +2377,16 @@ CREATE TABLE `ubicaciones` (
   `especificaciones` varchar(250) DEFAULT NULL,
   `ciudad_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `ubicaciones`
+--
+
+INSERT INTO `ubicaciones` (`id`, `calle`, `carrera`, `numero`, `barrio`, `especificaciones`, `ciudad_id`) VALUES
+(1, 'Avenida 19', NULL, '123-86', 'Santa Barbara', NULL, 524),
+(2, '5', NULL, '100-45', 'Deprisa', NULL, 418),
+(3, '15', NULL, '19-45', 'Servientrega', NULL, 524),
+(4, '15', NULL, '15-15', 'Domina', NULL, 799);
 
 -- --------------------------------------------------------
 
@@ -1856,7 +2423,75 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `tipo_identificacion`, `identificacion`, `nombres`, `apellidos`, `telefono`, `fecha_nacimiento`, `email`, `genero`, `password`, `remember_token`, `token`, `sesion_web`, `sesion_fuxion_track`, `sesion_fuxion_trax`, `archivo_id`, `rol_id`, `bodega_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(11, NULL, NULL, 'Superadministrador', 'Initial Fire', NULL, NULL, 'jcapotem@sena.edu.co', NULL, '$2y$10$iQtJWmwevqfrdKhl54/uYeXT8qtKNzrljPDVLxEvimjMdQMTBkydC', 'QHCRZ5G4Zi5AWU4TTyr1NEP5VWHefRyrGj5lIXEaJLEwps2qJZJeqUc7JBJZ', NULL, 'si', 'no', 'no', NULL, 1, NULL, NULL, '2017-08-31 14:09:49', '2017-10-11 20:44:24');
+(11, NULL, NULL, 'Superadministrador', 'Initial Fire', NULL, NULL, 'jcapotem@sena.edu.co', NULL, '$2y$10$iQtJWmwevqfrdKhl54/uYeXT8qtKNzrljPDVLxEvimjMdQMTBkydC', 'QHCRZ5G4Zi5AWU4TTyr1NEP5VWHefRyrGj5lIXEaJLEwps2qJZJeqUc7JBJZ', NULL, 'si', 'no', 'no', NULL, 1, NULL, NULL, '2017-08-31 14:09:49', '2017-10-11 20:44:24'),
+(110, 'C.C', '22', 'MARTHA ELISA', 'MELO AVILA', '86846765', NULL, 'jlcapote@misena.edu.co', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:31', '2017-10-24 23:22:31'),
+(111, 'C.C', NULL, 'LORENA', 'LOPEZ', '4331189', NULL, 'lotalovi@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(112, 'C.C', NULL, 'Paola Andrea ', 'Leal Lopez', '3102659822', NULL, 'paolaleal@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(113, 'C.C', NULL, 'ANA', 'MONTANA ROSAS', NULL, NULL, 'nanamontanarosas@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(114, 'C.C', NULL, 'Marta', 'Acevedo', '3113302274', NULL, 'gerenciaclo@tyc-asociados.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(115, 'C.C', NULL, 'Laura', 'Rueda', '3008509510', NULL, 'lauraruedasierra@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(116, 'C.C', NULL, 'Patricia Cilena', 'Galvis Monterrosa', '6675472', NULL, 'patriciagalvismon@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(117, 'C.C', NULL, 'Adriana ', 'Lopez Ussa', '3173687062', NULL, 'nana21992@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(118, 'C.C', NULL, 'ERIKA  PATRICIA', 'MONTERO  BRITO', '3015930935', NULL, 'erikapatriciamontero@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(119, 'C.C', NULL, 'Luz Amanda', 'Gomez Orozco', '3186397090', NULL, 'luzamanditi2017@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(120, 'C.C', '42071109', 'LILIANA', 'MUNERA LOPEZ', NULL, NULL, 'liliana_munera@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:32', '2017-10-24 23:22:32'),
+(121, 'C.C', NULL, 'Ema  Cande ', 'Maldonado Meza', '3135353381', NULL, 'emalmeza@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(122, 'C.C', NULL, 'LEONARDO ENRIQUE', 'MEZA DE LA HOZ', '3008040662', NULL, 'LEONARDO.MEZA@OUTLOOK.COM', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(123, 'C.C', NULL, 'NATALIE JHOANA', 'AVILA SIERRA', '7272284', NULL, 'natajoha0503@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(124, 'C.C', NULL, 'Jualia ', 'Uribe Sanchez', '3017568775', NULL, 'Usjuly@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(125, 'C.C', NULL, 'mayra julieth', 'lopez olivero', '4331189', NULL, 'marjulieth1987@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(126, 'C.C', '56076021', 'NASLY', 'BERARDINELLY GONZALEZ', NULL, NULL, 'nasly.paula@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(127, 'C.C', NULL, 'ELKIN ', 'PINILLA', '3014190662', NULL, 'elkin.78@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(128, 'C.C', NULL, 'DIANA MARCELA', 'MORALES QUINTERO', NULL, NULL, 'dianam.fuxion@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(129, 'C.C', '52385621', 'MARIA CECILIA', 'GALVIS GALEANO', '3166906229', NULL, 'galvismc@yahoo.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(130, 'C.C', NULL, 'MARTHA JULIANA', 'GALVIS GALEANO', NULL, NULL, 'MJGG78@HOTMAIL.COM', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(131, 'C.C', NULL, 'BERNARDO ', 'TOLEDO ARIAS', '7742195', NULL, 'berna.told@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(132, 'C.C', NULL, 'YOLANDA DEL SOCORRO', 'VELASQUEZ VARELA', '3016921274', NULL, 'lisyomar@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(133, 'C.C', NULL, 'luz dary', 'zapa tirado', '3137865478', NULL, 'luzhijas1114@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(134, 'C.C', NULL, 'Tatiana ', 'Villacorta Madrid', '3166230869', NULL, 'tatianavm28@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(135, 'C.C', NULL, 'JUAN MANUEL', 'MORENO ABELLO', NULL, NULL, 'jmmamoreno@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(136, 'C.C', NULL, 'Stefany Isabel', 'Diez Cogollo', '7854310', NULL, 'stefanydiez.j@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(137, 'C.C', NULL, 'MIRIAN', 'SANTORO DE BUITRAGO', NULL, NULL, 'monica.p.buitrago@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:33', '2017-10-24 23:22:33'),
+(138, 'C.C', NULL, 'YORNALDI DAVID', 'BENJUMEA JIMENEZ', '3104404556', NULL, 'yornaldidavid@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(139, 'C.C', NULL, 'maria monica', 'moreno casas', '4392484', NULL, 'miguebero@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(140, 'C.C', NULL, 'Maria Del pilar', 'Valero Cubillos', '8269232', NULL, 'pilarvaler@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(141, 'C.C', NULL, 'ELIZABETH', 'Aguirre Escobar', NULL, NULL, 'crica15@yahoo.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(142, 'C.C', NULL, 'YULIBETH ', 'QUINTERO RAMIREZ', '3162347744', NULL, 'daniangeljuan123@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(143, 'C.C', NULL, 'LUZ MERY ', 'PORRAS', '9018194', NULL, 'sandra.diaz@chevyplan.com.co', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(144, 'C.C', NULL, 'JENNIFER BEATRIZ', 'PERTUZ FERNANDE DE CASTRO', '3043539474', NULL, 'jenniferpertuz@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(145, 'C.C', NULL, 'JUAN  CARLOS', 'GIRALDO  GARCIA', '3207958006', NULL, 'juanchogarcia1@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(146, 'C.C', NULL, 'HEIDER  ENRIQUE', 'OVIEDO  CASTRO', '3232866507', NULL, 'marjulieth1987@yahoo.es', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(147, 'C.C', NULL, 'Edwin De Jesus', 'Bustamante Gonzalez', '573193416804', NULL, 'edwinbte@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(148, 'C.C', NULL, 'Linda  Rosa', 'Medina Ortega', '3145915427', NULL, 'lindaamedin@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(149, 'C.C', NULL, 'PRINCIPE GABRIEL', 'GONZALEZ ARANGO', '+57 3115596182', NULL, 'gabo.intos@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(150, 'C.C', NULL, 'victoria del carmen', 'vidal de ordoÃ±ez', '3505980610', NULL, 'sandraordonezvidal@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(151, 'C.C', NULL, 'Yuri ', 'Gereda ', '3103663411', NULL, 'yuri@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:34', '2017-10-24 23:22:34'),
+(152, 'C.C', NULL, 'CESAR RAUL', 'GRANADOS VASQUEZ', '3052604433', NULL, 'xprofuxion@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(153, 'C.C', NULL, 'carlos german', 'parraga guarnizo', '3006141', NULL, 'carlosg.parraga@outlook.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(154, 'C.C', NULL, 'Fanny Patricia', 'CarreÃ±o Devia', '3203068437', NULL, 'fanicita3105@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(155, 'C.C', NULL, 'MARBELYS  LEONOR', 'RODRIGUEZ CUJIA', '3017648515', NULL, 'marbe0409@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(156, 'C.C', NULL, 'JULIETH  NATALIA', 'PEREA GOMEZ', '3012261022', NULL, 'jnpg01@hotmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(157, 'C.C', NULL, 'fernando ', 'avila gonzalez', '3118353863', NULL, 'capacidades.fernando@gmail.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35'),
+(158, 'C.C', NULL, 'Maritza ', 'Trujillo Palencia', '6629562', NULL, 'maritrujillo23@outlook.com', NULL, NULL, NULL, NULL, 'no', 'no', 'no', NULL, 6, NULL, NULL, '2017-10-24 23:22:35', '2017-10-24 23:22:35');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users_correos`
+--
+
+CREATE TABLE `users_correos` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `correo_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `users_correos`
+--
+
+INSERT INTO `users_correos` (`id`, `user_id`, `correo_id`) VALUES
+(1, 110, 1);
 
 --
 -- Índices para tablas volcadas
@@ -1884,6 +2519,13 @@ ALTER TABLE `bodegas`
 ALTER TABLE `ciudades`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_ciudades_departamentos1_idx` (`departamento_id`);
+
+--
+-- Indices de la tabla `correos`
+--
+ALTER TABLE `correos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_correos_plantillas_correos1_idx` (`plantilla_correo_id`);
 
 --
 -- Indices de la tabla `cortes`
@@ -1927,6 +2569,24 @@ ALTER TABLE `estados_pedidos`
 --
 ALTER TABLE `funciones`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `guias`
+--
+ALTER TABLE `guias`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_guias_mallas_cobertura1_idx` (`malla_cobertura_id`),
+  ADD KEY `fk_guias_operadores_logisticos1_idx` (`operador_logistico_id`),
+  ADD KEY `fk_guias_archivos1_idx` (`foto_1`),
+  ADD KEY `fk_guias_archivos2_idx` (`foto_2`);
+
+--
+-- Indices de la tabla `guias_pedidos`
+--
+ALTER TABLE `guias_pedidos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_guias_has_pedidos_pedidos1_idx` (`pedido_id`),
+  ADD KEY `fk_guias_has_pedidos_guias1_idx` (`guia_id`);
 
 --
 -- Indices de la tabla `historial_estados_pedidos`
@@ -2063,6 +2723,14 @@ ALTER TABLE `productos`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `productos_enviados`
+--
+ALTER TABLE `productos_enviados`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_envios_productos1_idx` (`producto_id`),
+  ADD KEY `fk_envios_guias_pedidos1_idx` (`guia_pedido_id`);
+
+--
 -- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -2095,6 +2763,14 @@ ALTER TABLE `users`
   ADD KEY `fk_users_bodegas1_idx` (`bodega_id`);
 
 --
+-- Indices de la tabla `users_correos`
+--
+ALTER TABLE `users_correos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_users_has_correos_correos1_idx` (`correo_id`),
+  ADD KEY `fk_users_has_correos_users1_idx` (`user_id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -2114,10 +2790,15 @@ ALTER TABLE `bodegas`
 ALTER TABLE `ciudades`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1113;
 --
+-- AUTO_INCREMENT de la tabla `correos`
+--
+ALTER TABLE `correos`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT de la tabla `cortes`
 --
 ALTER TABLE `cortes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
@@ -2127,37 +2808,47 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `empresarios`
 --
 ALTER TABLE `empresarios`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=305;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
 --
 -- AUTO_INCREMENT de la tabla `estados_operadores_logisticos`
 --
 ALTER TABLE `estados_operadores_logisticos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `estados_pedidos`
 --
 ALTER TABLE `estados_pedidos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `funciones`
 --
 ALTER TABLE `funciones`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
+-- AUTO_INCREMENT de la tabla `guias`
+--
+ALTER TABLE `guias`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
+--
+-- AUTO_INCREMENT de la tabla `guias_pedidos`
+--
+ALTER TABLE `guias_pedidos`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+--
 -- AUTO_INCREMENT de la tabla `historial_estados_pedidos`
 --
 ALTER TABLE `historial_estados_pedidos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 --
 -- AUTO_INCREMENT de la tabla `kit_empresarios`
 --
 ALTER TABLE `kit_empresarios`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `mallas_cobertura`
 --
 ALTER TABLE `mallas_cobertura`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
@@ -2172,12 +2863,12 @@ ALTER TABLE `modulos`
 -- AUTO_INCREMENT de la tabla `modulos_funciones`
 --
 ALTER TABLE `modulos_funciones`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 --
 -- AUTO_INCREMENT de la tabla `nombres_estados_operadores_logisticos`
 --
 ALTER TABLE `nombres_estados_operadores_logisticos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `oauth_clients`
 --
@@ -2192,7 +2883,7 @@ ALTER TABLE `oauth_personal_access_clients`
 -- AUTO_INCREMENT de la tabla `operadores_logisticos`
 --
 ALTER TABLE `operadores_logisticos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `paises`
 --
@@ -2202,22 +2893,27 @@ ALTER TABLE `paises`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=649;
 --
 -- AUTO_INCREMENT de la tabla `pedidos_productos`
 --
 ALTER TABLE `pedidos_productos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
 --
 -- AUTO_INCREMENT de la tabla `plantillas_correos`
 --
 ALTER TABLE `plantillas_correos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=968;
+--
+-- AUTO_INCREMENT de la tabla `productos_enviados`
+--
+ALTER TABLE `productos_enviados`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
@@ -2227,12 +2923,17 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `ubicaciones`
 --
 ALTER TABLE `ubicaciones`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+--
+-- AUTO_INCREMENT de la tabla `users_correos`
+--
+ALTER TABLE `users_correos`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Restricciones para tablas volcadas
 --
@@ -2248,6 +2949,12 @@ ALTER TABLE `bodegas`
 --
 ALTER TABLE `ciudades`
   ADD CONSTRAINT `fk_ciudades_departamentos1` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `correos`
+--
+ALTER TABLE `correos`
+  ADD CONSTRAINT `fk_correos_plantillas_correos1` FOREIGN KEY (`plantilla_correo_id`) REFERENCES `plantillas_correos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `cortes`
@@ -2279,6 +2986,22 @@ ALTER TABLE `estados_operadores_logisticos`
 --
 ALTER TABLE `estados_pedidos`
   ADD CONSTRAINT `fk_estados_pedidos_plantillas_correos1` FOREIGN KEY (`plantilla_correo_id`) REFERENCES `plantillas_correos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Filtros para la tabla `guias`
+--
+ALTER TABLE `guias`
+  ADD CONSTRAINT `fk_guias_archivos1` FOREIGN KEY (`foto_1`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `fk_guias_archivos2` FOREIGN KEY (`foto_2`) REFERENCES `archivos` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `fk_guias_mallas_cobertura1` FOREIGN KEY (`malla_cobertura_id`) REFERENCES `mallas_cobertura` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_guias_operadores_logisticos1` FOREIGN KEY (`operador_logistico_id`) REFERENCES `operadores_logisticos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `guias_pedidos`
+--
+ALTER TABLE `guias_pedidos`
+  ADD CONSTRAINT `fk_guias_has_pedidos_guias1` FOREIGN KEY (`guia_id`) REFERENCES `guias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_guias_has_pedidos_pedidos1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `historial_estados_pedidos`
@@ -2318,7 +3041,7 @@ ALTER TABLE `operadores_logisticos`
 --
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `fk_ordenes_clientes1` FOREIGN KEY (`empresario_id`) REFERENCES `empresarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_ordenes_importaciones1` FOREIGN KEY (`corte_id`) REFERENCES `cortes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ordenes_importaciones1` FOREIGN KEY (`corte_id`) REFERENCES `cortes` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `fk_pedidos_bodegas1` FOREIGN KEY (`bodega_id`) REFERENCES `bodegas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -2327,6 +3050,13 @@ ALTER TABLE `pedidos`
 ALTER TABLE `pedidos_productos`
   ADD CONSTRAINT `fk_ordenes_has_items_items1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_ordenes_has_items_ordenes1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `productos_enviados`
+--
+ALTER TABLE `productos_enviados`
+  ADD CONSTRAINT `fk_envios_guias_pedidos1` FOREIGN KEY (`guia_pedido_id`) REFERENCES `guias_pedidos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_envios_productos1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `roles`
@@ -2348,6 +3078,13 @@ ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_bodegas1` FOREIGN KEY (`bodega_id`) REFERENCES `bodegas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_users_roles1` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_users_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `users_correos`
+--
+ALTER TABLE `users_correos`
+  ADD CONSTRAINT `fk_users_has_correos_correos1` FOREIGN KEY (`correo_id`) REFERENCES `correos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_users_has_correos_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

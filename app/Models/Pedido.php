@@ -17,6 +17,7 @@ class Pedido extends Model
         'subtotal',
         'total_tax',
         'costo_envio',
+        'descuento',
         'total',
         'tipo_pago',
         'volumen_comisionable',
@@ -30,7 +31,7 @@ class Pedido extends Model
     }
 
     public function corte(){
-        return $this->belongsTo(Corte::class,'importacion_id');
+        return $this->belongsTo(Corte::class,'corte_id');
     }
 
     public function productos(){
@@ -39,5 +40,13 @@ class Pedido extends Model
 
     public function bodega(){
         return $this->belongsTo(Bodega::class,'bodega_id');
+    }
+
+    public function estadosPedidos(){
+        return $this->belongsToMany(EstadoPedido::class,'historial_estados_pedidos','pedido_id','estado_pedido_id');
+    }
+
+    public function guia(){
+        return $this->belongsTo(Guia::class,'pedidos.guia_id');
     }
 }

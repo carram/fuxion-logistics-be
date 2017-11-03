@@ -5,11 +5,15 @@
         <div class="row">
             <p class="titulo_principal margin-bottom-20">
                 Pedidos en corte #{{$corte->numero}}
-                <a href="{{url('/corte/solicitar-guias/'.$corte->id)}}" class="right text-primary font-medium margin-top-5">Solicitar guías</a>
+                @if($corte->guias_asignadas == 'no')
+                    <a href="#!" class="right text-primary font-medium margin-top-5 btn-solicitar-guias">Solicitar guías</a>
+                @else
+                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="right text-primary font-medium margin-top-5">Solicitar guías</a>
+                @endif
             </p>
 
             <div class="col-xs-12">
-                @include('layouts.alertas',['id_contenedor'=>'pedidos-corte'])
+                @include('layouts.alertas',['id_contenedor'=>'alertas-pedidos-corte'])
             </div>
 
             <table id="tabla-pedidos-corte" class="table-hover">
@@ -24,7 +28,11 @@
                 </thead>
             </table>
             <div class="col-xs-12 margin-top-20">
-                <a href="{{url('/corte/solicitar-guias/'.$corte->id)}}" class="btn btn-primary right">Solicitar guías</a>
+                @if($corte->guias_asignadas == 'no')
+                    <a href="#!" class="btn btn-primary right btn-solicitar-guias">Solicitar guías</a>
+                @else
+                    <a href="{{url('/corte/guias/'.$corte->id)}}" class="btn btn-primary right">Solicitar guías</a>
+                @endif
             </div>
         </div>
         {!! Form::hidden('corte',$corte->id,['id'=>'corte']) !!}

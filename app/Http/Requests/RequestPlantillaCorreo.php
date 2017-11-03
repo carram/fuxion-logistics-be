@@ -27,13 +27,11 @@ class RequestPlantillaCorreo extends FormRequest
             return [
                 'nombre'=>'required|unique:plantillas_correos,nombre,'.$this->id.',id|max:150',
                 'asunto'=>'max:150',
-                'archivo'=>'required|max:250',
             ];
         }else {
             return [
                 'nombre'=>'required|unique:plantillas_correos,nombre',
                 'asunto'=>'max:150',
-                'archivo'=>'required|max:250',
             ];
         }
     }

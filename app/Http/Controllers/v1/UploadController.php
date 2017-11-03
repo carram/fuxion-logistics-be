@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\v1;
-use App\Http\Controllers\Controller;
+//namespace App\Http\Controllers\v1;
+namespace FuxionLogistic\Http\Controllers\v1;
+use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
-use Mockery\CountValidator\Exception;
+//use Mockery\CountValidator\Exception;
 
 
 class UploadController extends Controller
@@ -28,9 +29,8 @@ class UploadController extends Controller
     public function store(Request $r){
 
         if($r->file('picture')){
-           // $r->file('picture')->store('subidas/movil');
-            //Storage::putFile('subidas/movil', $r->file('picture'));
-            $r->file('picture')->storeAs('subidas/movil', "foto_". $r->input("orden") .".jpg");
+
+            $r->file('picture')->storeAs($r->input("tipo").'/'.$r->input("id"), $r->input("nombre").".jpg");
         }
         return response(["data" => $r->all()]);
     }

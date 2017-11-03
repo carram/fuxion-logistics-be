@@ -11,6 +11,5 @@ class PlantillaCorreo extends Model
     protected $fillable = [
         'nombre',
         'asunto',
-        'archivo',
     ];
 }

@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "artisaninweb/laravel-soap": "0.3.0.7",
         "barryvdh/laravel-debugbar": "~2.4",
+        "econea/nusoap": "v0.9.5.4",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.4.*",
         "laravel/passport": "^4.0",

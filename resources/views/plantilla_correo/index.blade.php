@@ -19,7 +19,6 @@
                 <thead>
                 <th>Nombre</th>
                 <th>Asunto</th>
-                <th>Archivo</th>
                 @if(\Illuminate\Support\Facades\Auth::user()->tieneFunciones(9,[3,2],false,$privilegio_superadministrador))
                     <th class="text-center">Opciones</th>
                 @endif
@@ -64,14 +63,12 @@
                 var cols = [
                     {data: 'nombre', name: 'nombre'},
                     {data: 'asunto', name: 'asunto'},
-                    {data: 'archivo', name: 'archivo'},
                     {data: 'opciones', name: 'opciones', orderable: false, searchable: false,"className": "text-center"}
                 ];
             }else{
                 var cols = [
                     {data: 'nombre', name: 'nombre'},
                     {data: 'asunto', name: 'asunto'},
-                    {data: 'archivo', name: 'archivo'},
                 ]
             }
 
