@@ -1,28 +1,45 @@
 <?php
- $spaces = "------------------------";
-    $ddate =  $data[0]->fecha_orden ;
-    $date = new DateTime($ddate);
-    $week = $date->format("W-Y");
-    $descuento=0;
+$spaces = "--------------------------------------";
+
+
+
+
+
+
 
 ?>
-
+<p>{{ $spaces  }}</p>
+<p>{{ $spaces  }}</p>
 <h2>FUXION</h2>
+<p>{{ $spaces  }}</p>
+<p>{{ $spaces  }}</p>
 <p>PROLIFE BIOTECH COLOMBIA SAS</p>
 <p>NIT 900.413.155-8</p>
-<p>CARRERA 19 No.123-86 - BOGOTA</p>
+<p>{{ $data[0]->direccion_factura  }}</p>
 <p>COLOMBIA</p>
 
 <p>{{ $spaces  }}</p>
+<?php
 
-<p>FACTURA DE VENTA:{{ $data[0]->prefijo_facturacion.$data[0]->serie.$data[0]->correlativo  }}</p>
+$inicial =$data[0]->correlativo;
+
+$ceros="00000000";//Variable que rellena los digitos faltantes para completar los ceros a la izquierda del número de factura
+
+$ceros=substr($ceros,0,(strlen($ceros)-strlen($inicial)));
+
+$date = new DateTime($data[0]->fecha_orden);
+$week = $date->format("W-Y");
+$no_factura =$data[0]->serie."-".$ceros.$inicial;
+
+?>
+<p>FACTURA DE VENTA:{{ $no_factura }}</p>
 <p>FECHA:{{ $data[0]->fecha_impresion  }}</p>
 <p>RESOLUCION DE FACTURACION</p>
-<p>Nº 18762001629294 de 21/12/2016</p>
+<p>Nº {{ $data[0]->resolucion  }} de {{ $data[0]->fecha_resolucion  }}</p>
 <p>REGIMEN COMUN Grandes Contribuyentes</p>
 <p> ### Res 600076 de 01 de diciembre del 2016</p><!-- CONFIRMAR -->
-<p>FACTURADO POR: {{ $data[0]->impreso_por  }}</p>
-<p>RANGO AUTORIZADO DE LA 36360 AL 58000</p><!-- CONFIRMAR -->
+<p>FACTURADO POR: {{ $data[0]->nombre_impreso  }}</p>
+<p>RANGO AUTORIZADO DE LA {{   $data[0]->rango_desde  }} AL {{ $data[0]->rango_hasta  }}</p><!-- CONFIRMAR -->
 
 <p>{{ $spaces  }}</p>
 
@@ -32,10 +49,12 @@
 <p>PAT:{{ $empresario[0]->enroler_id  }}</p>
 <p>SEMANA:{{ $week  }}</p><!-- CONFIRMAR A QUE FECHA SE CALCULA -->
 <p>N PEDIDO:{{ $data[0]->orden_id  }}</p>
-<p>DESCUENTO: PREGUNTAR !!! </p><!-- NO LLEGA POR NINGUN LADO -->
+<p>DESCUENTO: {{ $data[0]->descuento }} </p><!-- NO LLEGA POR NINGUN LADO -->
 
 <p>{{ $spaces  }}</p>
-
+<?php
+$descuento=0;
+?>
 <table>
     <tr>
         <td>CANT</td>
@@ -45,13 +64,13 @@
     </tr>
     @foreach ($productos as $producto)
         @if($producto->codigo!=='DSCT')
-        <tr>
-            <td>{{ $producto->cantidad  }}</td>
-            <td>{{ $producto->descripcion }}</td>
-            <td>{{ $producto->precio_unitario }}</td>
-            <td>{{ $producto->total }}</td>
+            <tr>
+                <td>{{ $producto->cantidad  }}</td>
+                <td>{{ $producto->descripcion }}</td>
+                <td>{{ $producto->precio_unitario }}</td>
+                <td>{{ $producto->total }}</td>
 
-        </tr>
+            </tr>
         @else
             <?php
             $descuento=$producto->total;
@@ -89,6 +108,46 @@
 
 <p>¡GRACIAS POR SU COMPRA!</p>
 <p>¡CON FUXION MEJORAMOS TU VIDA!</p>
+
+
+
+<?php
+
+$spaces = ":::::::::::::::::::::::::::::::::::";
+$centrado = "::::::::::::";
+
+?>
+
+<p>{{ $spaces  }}</p>
+
+<h2>FUXION</h2>
+<p>{{ $spaces  }}</p>
+
+<p>Estimad@</p>
+
+<p>Teniendo en cuenta la gran demanda de
+    nuestros productos, en tu pedido número
+    {{ $data[0]->orden_id  }} no fué
+    posible enviar el/los siguientes productos:</p>
+
+@foreach ($productos as $producto)
+    @if($producto->codigo!=='DSCT')
+        <p>PRODUCTO:{{ $producto->descripcion  }}</p>
+        <p>CANTIDAD:{{ $producto->cantidad }}</p>
+    @endif
+@endforeach
+
+<p>PROLIFE BIOTECH COLOMBIA S.A.S.,
+    ofrece mil disculpas por los inconvenientes
+    causados. Los productos relacionados serán
+    enviados en los próximos días sin cargos
+    adicionales, por lo cual recibirás un mensaje
+    vía email a la dirección registrada indicándote
+    los datos del nuevo envío.</p>
+<p>Gracias por tu comprensión.</p>
+<p>Prolife Biotech Colombias S.A.S
+    FuXion</p>
+<p>{{ $centrado }}<strong>Mejoramos tu vida</strong>{{ $centrado  }}</p>
 
 
 
