@@ -13,9 +13,10 @@ class FacturaController extends Controller
     //
     public function  show($guia){
 
-        $data = Pedido::select("pedidos.*")
+        $pedidos = Pedido::select("pedidos.*","usuarios_exigo.nombre_impreso", "usuarios_exigo.rango_desde", "usuarios_exigo.rango_hasta","usuarios_exigo.resolucion","usuarios_exigo.fecha_resolucion","usuarios_exigo.direccion_factura" )
             ->join("guias_pedidos","pedidos.id","=","guias_pedidos.pedido_id")
             ->join("guias","guias_pedidos.guia_id","=","guias.id")
+            ->join("usuarios_exigo","pedidos.serie","=","usuarios_exigo.serie")
             ->where("guias.numero",$guia)->get();
 
         $empresario = Empresario::select("empresarios.*","users.*")
@@ -37,7 +38,7 @@ class FacturaController extends Controller
                                             inner join guias g on g.id = gp.guia_id
                                             where g.numero = '".$guia."'");
         
-        return view('factura.index', [ 'data' => $data, 'empresario' => $empresario , 'productos' => $productos ]);
+        return view('factura.index', [ 'pedidos' => $pedidos, 'empresario' => $empresario , 'productos' => $productos ]);
        // return response(["data" => $data, "empresario" => $empresario, "productos" => $productos]);
     }
 }

@@ -5,9 +5,10 @@ $spaces = "--------------------------------------";
 
 
 
-
-
 ?>
+
+@foreach ($pedidos as $pedido)
+
 <p>{{ $spaces  }}</p>
 <p>{{ $spaces  }}</p>
 <h2>FUXION</h2>
@@ -15,31 +16,31 @@ $spaces = "--------------------------------------";
 <p>{{ $spaces  }}</p>
 <p>PROLIFE BIOTECH COLOMBIA SAS</p>
 <p>NIT 900.413.155-8</p>
-<p>{{ $data[0]->direccion_factura  }}</p>
+<p>{{ $pedido->direccion_factura  }}</p>
 <p>COLOMBIA</p>
 
 <p>{{ $spaces  }}</p>
 <?php
 
-$inicial =$data[0]->correlativo;
+$inicial =$pedido->correlativo;
 
 $ceros="00000000";//Variable que rellena los digitos faltantes para completar los ceros a la izquierda del número de factura
 
 $ceros=substr($ceros,0,(strlen($ceros)-strlen($inicial)));
 
-$date = new DateTime($data[0]->fecha_orden);
+$date = new DateTime($pedido->fecha_orden);
 $week = $date->format("W-Y");
-$no_factura =$data[0]->serie."-".$ceros.$inicial;
+$no_factura =$pedido->serie."-".$ceros.$inicial;
 
 ?>
 <p>FACTURA DE VENTA:{{ $no_factura }}</p>
-<p>FECHA:{{ $data[0]->fecha_impresion  }}</p>
+<p>FECHA:{{ $pedido->fecha_impresion  }}</p>
 <p>RESOLUCION DE FACTURACION</p>
-<p>Nº {{ $data[0]->resolucion  }} de {{ $data[0]->fecha_resolucion  }}</p>
+<p>Nº {{ $pedido->resolucion  }} de {{ $pedido->fecha_resolucion  }}</p>
 <p>REGIMEN COMUN Grandes Contribuyentes</p>
 <p> ### Res 600076 de 01 de diciembre del 2016</p><!-- CONFIRMAR -->
-<p>FACTURADO POR: {{ $data[0]->nombre_impreso  }}</p>
-<p>RANGO AUTORIZADO DE LA {{   $data[0]->rango_desde  }} AL {{ $data[0]->rango_hasta  }}</p><!-- CONFIRMAR -->
+<p>FACTURADO POR: {{ $pedido->nombre_impreso  }}</p>
+<p>RANGO AUTORIZADO DE LA {{   $pedido->rango_desde  }} AL {{ $pedido->rango_hasta  }}</p><!-- CONFIRMAR -->
 
 <p>{{ $spaces  }}</p>
 
@@ -48,8 +49,8 @@ $no_factura =$data[0]->serie."-".$ceros.$inicial;
 <p>CC/RUNT/NIT:{{ $empresario[0]->identificacion  }}</p>
 <p>PAT:{{ $empresario[0]->enroler_id  }}</p>
 <p>SEMANA:{{ $week  }}</p><!-- CONFIRMAR A QUE FECHA SE CALCULA -->
-<p>N PEDIDO:{{ $data[0]->orden_id  }}</p>
-<p>DESCUENTO: {{ $data[0]->descuento }} </p><!-- NO LLEGA POR NINGUN LADO -->
+<p>N PEDIDO:{{ $pedido->orden_id  }}</p>
+<p>DESCUENTO: {{ $pedido->descuento }} </p><!-- NO LLEGA POR NINGUN LADO -->
 
 <p>{{ $spaces  }}</p>
 <?php
@@ -82,19 +83,19 @@ $descuento=0;
 
 <p>{{ $spaces  }}</p>
 
-<p>SUBTOTAL:{{ $data[0]->subtotal  }}</p>
+<p>SUBTOTAL:{{ $pedido->subtotal  }}</p>
 <p>DCTO: {{ $descuento }}  </p>
-<p>IVA:{{  $data[0]->total_tax }}</p>
-<p>FLETE:{{ $data[0]->costo_envio  }}</p>
-<p>TOTAL:{{ $data[0]->total  }}</p>
+<p>IVA:{{  $pedido->total_tax }}</p>
+<p>FLETE:{{ $pedido->costo_envio  }}</p>
+<p>TOTAL:{{ $pedido->total  }}</p>
 
 <p>{{ $spaces  }}</p>
 
-<p>FORMAS DE PAGO:{{ $data[0]->tipo_pago   }}</p>
+<p>FORMAS DE PAGO:{{ $pedido->tipo_pago   }}</p>
 
 <p>{{ $spaces  }}</p>
 
-<p>HAS OBTENIDO {{ $data[0]->volumen_comisionable }} PUNTOS VOLUMEN</p>
+<p>HAS OBTENIDO {{ $pedido->volumen_comisionable }} PUNTOS VOLUMEN</p>
 
 <p>{{ $spaces  }}</p>
 <!-- LOS DATOS DEL PED - PEDIDO NO LLEGAN A LAS TABLAS AUN -->
@@ -109,7 +110,7 @@ $descuento=0;
 <p>¡GRACIAS POR SU COMPRA!</p>
 <p>¡CON FUXION MEJORAMOS TU VIDA!</p>
 
-
+@endforeach
 
 <?php
 
@@ -127,7 +128,7 @@ $centrado = "::::::::::::";
 
 <p>Teniendo en cuenta la gran demanda de
     nuestros productos, en tu pedido número
-    {{ $data[0]->orden_id  }} no fué
+    ----------------- no fué
     posible enviar el/los siguientes productos:</p>
 
 @foreach ($productos as $producto)
