@@ -53,14 +53,16 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() {
     Route::resource('cortes', 'v1\CorteController');
     Route::get('pedidos/{barcode}/{corte_id}','v1\PedidoController@getPedido');
     Route::get('devolucion/{barcode}','v1\PedidoController@getDevolucion');
-    Route::resource('factura', 'v1\FacturaController');
+
     Route::resource('enviado', 'v1\EnviadoController');
     Route::get('autorizacion', 'v1\AutorizacionController@index');//Realiza validación rápida de credenciales
     Route::get('consolidado/{corte}', 'v1\PedidoController@getConsolidado');
 });
 
+
 Route::group(['prefix' => 'v1'], function() {
    // Route::resource('factura', 'v1\FacturaController');
+    Route::get('factura/{guia}/{cambio}', 'v1\FacturaController@show');
 
 });
 

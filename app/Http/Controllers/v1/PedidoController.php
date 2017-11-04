@@ -16,7 +16,7 @@ class PedidoController extends Controller
     public function getPedido($barcode,$corte_id)
     {
 
-        $pedidos = Pedido::select("pedidos.*","guias.*", "guias_pedidos.id as guia_pedido_id")
+        $pedidos = Pedido::select("pedidos.*","guias.*", "guias_pedidos.id as guia_pedido_id","pedidos.id as pedido_id")
             ->join("guias_pedidos","pedidos.id","=","guias_pedidos.pedido_id")
             ->join("guias","guias_pedidos.guia_id","=","guias.id")
             ->join("cortes","pedidos.corte_id","=","cortes.id")
@@ -29,7 +29,7 @@ class PedidoController extends Controller
             ->join("guias_pedidos","pedidos.id","=","guias_pedidos.pedido_id")
             ->join("guias","guias_pedidos.guia_id","=","guias.id")
             ->join("users","users.id","=","empresarios.user_id")
-            ->where("guias.numero",$barcode)->get();
+            ->where("guias.numero",$barcode)->first();
 
         $productos = DB::select("select
                                         pr.*,
@@ -43,9 +43,20 @@ class PedidoController extends Controller
                                             inner join guias g on g.id = gp.guia_id
                                             where g.numero = '".$barcode."'  and pr.codigo <> 'DSCT' ");
 
-        // dd($corte_id);
 
-        return response(["data" => $pedidos, "empresario" => $empresario, "productos" => $productos]);
+        $estado= DB::select("SELECT
+                                razon_estado
+                                    FROM
+                                v_historial_estados_pedido hep
+                            WHERE
+                                hep.historial_estado_pedido_id = (SELECT 
+                                        MAX(id) AS max_id
+                                    FROM
+                                        historial_estados_pedidos he
+                                    WHERE
+                                        pedido_id = '". $pedidos[0]->pedido_id."')");
+
+        return response(["data" => $pedidos, "empresario" => $empresario, "productos" => $productos, "estado" => $estado[0]->razon_estado ]);
     }
 
 

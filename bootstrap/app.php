@@ -40,8 +40,8 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     FuxionLogistic\Exceptions\Handler::class
 );
-$app->singleton(Artisaninweb\SoapWrapper\ServiceProvider::class);
-class_alias('Artisaninweb\SoapWrapper\Facade', 'SoapWrapper');
+//$app->singleton(Artisaninweb\SoapWrapper\ServiceProvider::class);
+//class_alias('Artisaninweb\SoapWrapper\Facade', 'SoapWrapper');
 
 /*
 |--------------------------------------------------------------------------

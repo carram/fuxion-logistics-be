@@ -182,7 +182,6 @@ return [
         Yajra\Datatables\ButtonsServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
-        Artisaninweb\SoapWrapper\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
@@ -237,9 +236,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-    ],
-
-    'facades'=>[
-        'SoapWrapper' => 'Artisaninweb\SoapWrapper\Facade'
     ]
+
+
 ];
