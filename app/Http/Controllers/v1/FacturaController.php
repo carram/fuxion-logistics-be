@@ -11,8 +11,11 @@ use FuxionLogistic\Http\Controllers\Controller;
 class FacturaController extends Controller
 {
     //
-    public function  show($guia,$cambio){
+    public function  getFactura(Request $r){
 
+        $guia = $r->input("guia");
+        $cambio = $r->input("estado");
+        
         $pedidos = Pedido::select("pedidos.*","guias_pedidos.id as gp_id","pedidos.id as pedido_id","t1.razon_estado as razon_estado","t1.estado_pedido_id as estado_pedido_id","usuarios_exigo.nombre_impreso", "usuarios_exigo.rango_desde", "usuarios_exigo.rango_hasta","usuarios_exigo.resolucion","usuarios_exigo.fecha_resolucion","usuarios_exigo.direccion_factura" )
             ->join("guias_pedidos","pedidos.id","=","guias_pedidos.pedido_id")
             ->join("guias","guias_pedidos.guia_id","=","guias.id")
@@ -52,6 +55,6 @@ class FacturaController extends Controller
 
 
         return view('factura.index', [ 'pedidos' => $pedidos, 'empresario' => $empresario , 'productos' => $productos, 'cambio' => $cambio=="true"? true : false  ]);
-       // return response(["data" => $data, "empresario" => $empresario, "productos" => $productos]);
+        //return response(["data" => $data, "empresario" => $empresario, "productos" => $productos]);
     }
 }

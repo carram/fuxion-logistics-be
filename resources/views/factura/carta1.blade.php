@@ -1,26 +1,20 @@
 
-<?php
+{!! $spaces  !!}
 
-$spaces = ":::::::::::::::::::::::::::::::::::";
-$centrado = ":::::::";
+<h2 style="text-align: center;" >FUXION CARTA 1</h2>
 
-?>
-
-<h3>{{ $spaces  }}</h3>
-
-<h2>FUXION CARTA 1</h2>
-<h3>{{ $spaces  }}</h3>
+{!! $spaces  !!}
 
 <p>Estimad@</p>
 
 <p>Teniendo en cuenta la gran demanda de
     nuestros productos, en tu pedido número
-    {{ $pedido->serie."-".$pedido->correlativo  }} no fué
+    {{ $pedido->orden_id }} no fué
     posible enviar el/los siguientes productos:</p>
 
 @foreach ($productos_enviados as $producto)
-        <p><strong>PROD:</strong>{{ $producto["descripcion"]   }}</p>
-       <p><stong>CANT:</stong>{{ $producto["cantidad"]  }}</p>
+        <p><strong>PROD : </strong>{{ $producto["descripcion"]   }}</p>
+       <p><strong>CANT : </strong>{{ $producto["cantidad"]  }}</p>
 
 @endforeach
 

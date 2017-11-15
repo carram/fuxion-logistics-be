@@ -1,15 +1,13 @@
 
-<p>{{ $spaces  }}</p>
-<p>{{ $spaces  }}</p>
-<h2>FUXION</h2>
-<p>{{ $spaces  }}</p>
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
+<h2 style="text-align: center;" >FUXION FACTURA</h2>
+{!! $spaces  !!}
 <p>PROLIFE BIOTECH COLOMBIA SAS</p>
 <p>NIT 900.413.155-8</p>
 <p>{{ $pedido->direccion_factura  }}</p>
 <p>COLOMBIA</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 <?php
 $inicial =$pedido->correlativo;
 $ceros="00000000";//Variable que rellena los digitos faltantes para completar los ceros a la izquierda del número de factura
@@ -19,7 +17,7 @@ $week = $date->format("W-Y");
 $no_factura =$pedido->serie."-".$ceros.$inicial;
 
 ?>
-<h1>FACTURA DE VENTA:{{ $no_factura }}</h1>
+<p>FACTURA DE VENTA:{{ $no_factura }}</p>
 <p>FECHA:{{ $pedido->fecha_impresion  }}</p>
 <p>RESOLUCION DE FACTURACION</p>
 <p>Nº {{ $pedido->resolucion  }} de {{ $pedido->fecha_resolucion  }}</p>
@@ -28,7 +26,7 @@ $no_factura =$pedido->serie."-".$ceros.$inicial;
 <p>FACTURADO POR: {{ $pedido->nombre_impreso  }}</p>
 <p>RANGO AUTORIZADO DE LA {{   $pedido->rango_desde  }} AL {{ $pedido->rango_hasta  }}</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
 <p>TIPO EMPRESARIO:{{ $empresario[0]->tipo }}</p>
 <p>CLIENTE:{{ $empresario[0]->nombres." ".$empresario[0]->apellidos  }}</p>
@@ -38,8 +36,8 @@ $no_factura =$pedido->serie."-".$ceros.$inicial;
 <p>N PEDIDO:{{ $pedido->orden_id  }}</p>
 <p>DESCUENTO: {{ $pedido->descuento }} </p>
 
-<h2>ESTADO:{{ $pedido->razon_estado  }}</h2>
-<p>{{ $spaces  }}</p>
+<!-- <h2>ESTADO:{{ $pedido->razon_estado  }}</h2> -->
+{!! $spaces  !!}
 <?php
         $descuento=0;
 $productos_enviados=[];
@@ -66,8 +64,8 @@ $productos_enviados=[];
             <tr>
                 <td>{{ $producto->cantidad  }}</td>
                 <td>{{ $producto->descripcion }}</td>
-                <td>{{ $producto->precio_unitario }}</td>
-                <td>{{ $producto->total }}</td>
+                <td>{{ strval($producto->precio_unitario) }}</td>
+                <td>{{ strval($producto->total) }}</td>
 
             </tr>
         @else
@@ -79,7 +77,7 @@ $productos_enviados=[];
     @endforeach
 </table>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
 <p>SUBTOTAL:{{ $pedido->subtotal  }}</p>
 <p>DCTO: {{ $descuento }}  </p>
@@ -87,15 +85,15 @@ $productos_enviados=[];
 <p>FLETE:{{ $pedido->costo_envio  }}</p>
 <p>TOTAL:{{ $pedido->total  }}</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
 <p>FORMAS DE PAGO:{{ $pedido->tipo_pago   }}</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
 <p>HAS OBTENIDO {{ $pedido->volumen_comisionable }} PUNTOS VOLUMEN</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
 <p>CONTACTO:{{ $empresario[0]->nombres." ".$empresario[0]->apellidos   }}</p>
 <p>DIRECCION DE ENVIO:{{ $empresario[0]->direccion  }}</p>
@@ -103,13 +101,19 @@ $productos_enviados=[];
 <p>DEPARTAMENTO:{{ $empresario[0]->departamento  }}</p>
 <p>NUMERO DE TELEFONO:{{ $empresario[0]->telefono  }}</p>
 
-<p>{{ $spaces  }}</p>
+{!! $spaces  !!}
 
-<p>¡GRACIAS POR SU COMPRA!</p>
-<p>¡CON FUXION MEJORAMOS TU VIDA!</p>
-<p>{{ $spaces  }}</p>
-<p>{{ $spaces  }}</p>
+<p style="text-align: center;" >¡GRACIAS POR SU COMPRA!</p>
+<p style="text-align: center;" >¡CON FUXION MEJORAMOS TU VIDA!</p>
+
+{!! $spaces  !!}
+
+<br />
+<br />
+<br />
+
 @if(count($productos_enviados)>0)
+
     @include('factura.carta1')
 @endif
 

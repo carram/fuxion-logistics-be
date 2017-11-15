@@ -52,17 +52,24 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() {
     Route::post('subida', 'v1\UploadController@store' );
     Route::resource('cortes', 'v1\CorteController');
     Route::get('pedidos/{barcode}/{corte_id}','v1\PedidoController@getPedido');
+    Route::post('setIngreso','v1\PedidoController@setIngreso');
+    Route::post('setEstado','v1\PedidoController@setEstado');
     Route::get('devolucion/{barcode}','v1\PedidoController@getDevolucion');
+    Route::post('factura', 'v1\FacturaController@getFactura');
 
     Route::resource('enviado', 'v1\EnviadoController');
+    Route::post('deleteEnviado','v1\EnviadoController@deleteEnviosPorGuia');
     Route::get('autorizacion', 'v1\AutorizacionController@index');//Realiza validación rápida de credenciales
     Route::get('consolidado/{corte}', 'v1\PedidoController@getConsolidado');
+    Route::get('guias/{corte}', 'v1\CorteController@getNumeroGuias');
+    Route::get('guiasoperador/{operador}/{corte}', 'v1\CorteController@getGuiasPorOperadorYCorte');
+    Route::post('actualizaoperador', 'v1\GuiaController@actualizarOperador');
 });
 
 
 Route::group(['prefix' => 'v1'], function() {
    // Route::resource('factura', 'v1\FacturaController');
-    Route::get('factura/{guia}/{cambio}', 'v1\FacturaController@show');
+    //Route::get('factura/{guia}/{cambio}', 'v1\FacturaController@show');
 
 });
 
